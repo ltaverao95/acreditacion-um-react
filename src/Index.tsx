@@ -13,6 +13,6 @@ if (__DEV__ == "dev") {
 }
 
 ReactDOM.render(
-    <HomeComponent compiler="TypeScript" framework="React" />,
+    <HomeComponent />,
     rootApp
 );
