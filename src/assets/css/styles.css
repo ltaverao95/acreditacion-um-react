@@ -26,13 +26,22 @@
     justify-self: center;
 }
 p{
-    text-align: center;
     font-weight: bold;
+    text-align: center;
 }
 .chart{
     border: 1px solid black;
-    width: 500px;
     height: 300px;
+    margin: 0 auto;
+    width: 500px;
+}
+
+/*Media Queries*/
+
+@media screen and (max-width: 516px){
+    .chart{
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 768px){
