@@ -1,0 +1,56 @@
+.main-container{
+    display: grid;
+    grid-template-areas: "column1 . column2"
+                         "column3 . column4"
+                         "column5 column5 column5";
+    grid-row-gap: 15px;
+}
+.column1{
+    grid-area: column1;
+    justify-self: center;
+}
+.column2{
+    grid-area: column2;
+    justify-self: center;
+}
+.column3{
+    grid-area: column3;
+    justify-self: center;
+}
+.column4{
+    grid-area: column4;
+    justify-self: center;
+}
+.column5{
+    grid-area: column5;
+    justify-self: center;
+}
+p{
+    text-align: center;
+    font-weight: bold;
+}
+.chart{
+    border: 1px solid black;
+    width: 500px;
+    height: 300px;
+}
+
+@media screen and (max-width: 768px){
+    .main-container{
+        grid-template-areas: "column1"
+                             "column2"
+                             "column3"
+                             "column4"
+                             "column5";
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1020px){
+    .main-container{
+        grid-template-areas: "column1"
+                             "column2"
+                             "column3"
+                             "column4"
+                             "column5";
+    }
+}

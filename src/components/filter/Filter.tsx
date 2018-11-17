@@ -1,17 +1,11 @@
 import * as React from "react";
 import Select from 'react-select';
 
-import { KeyValue } from "../../models";
+import { KeyValue, CommonProps } from "../../models";
 
-export interface FilterProps {
-    label: string;
-    data: Array<KeyValue>;
-    onFilterChange: (data: Array<KeyValue>) => void;
-}
+export class FilterComponent extends React.Component<CommonProps, undefined> {
 
-export class FilterComponent extends React.Component<FilterProps, undefined> {
-
-    constructor(props: FilterProps) {
+    constructor(props: CommonProps) {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
@@ -23,11 +17,11 @@ export class FilterComponent extends React.Component<FilterProps, undefined> {
 
         if (selectedValues.length == 0 ||
             isSelectedAll != undefined) {
-            this.props.onFilterChange(this.props.data.filter(x => x.value != 'select_all'));
+            this.props.onChange(this.props.data.filter(x => x.value != 'select_all'));
             return;
         }
 
-        this.props.onFilterChange(selectedValues);
+        this.props.onChange(selectedValues);
     }
 
     render() {
