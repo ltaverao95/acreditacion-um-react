@@ -1,0 +1,2 @@
+https://github.com/chartjs/Chart.js
+https://www.npmjs.com/package/chartjs-funnel

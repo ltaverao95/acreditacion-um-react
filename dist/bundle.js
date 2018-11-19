@@ -28558,6 +28558,168 @@ var HomeComponent = /** @class */ (function (_super) {
         };
         return _this;
     }
+    HomeComponent.prototype.chart = function () {
+        var barChartData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                    label: 'Dataset 1',
+                    backgroundColor: "rgb(255, 99, 132)",
+                    data: [
+                        -49,
+                        23,
+                        85,
+                        -76,
+                        54,
+                        26,
+                        74
+                    ]
+                }, {
+                    label: 'Dataset 2',
+                    backgroundColor: "rgb(54, 162, 235)",
+                    data: [
+                        89
+                            - 67,
+                        84,
+                        12,
+                        90,
+                        39,
+                        -92
+                    ]
+                }, {
+                    label: 'Dataset 3',
+                    backgroundColor: "rgb(75, 192, 192)",
+                    data: [
+                        -20,
+                        21,
+                        58,
+                        85,
+                        -86,
+                        -53,
+                        91
+                    ]
+                }]
+        };
+        var ctx = document.getElementsByClassName("myChart");
+        for (var i = 0; i < ctx.length; i++) {
+            new Chart(ctx[i], {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Acreditación UM'
+                    },
+                    tooltips: {
+                        enabled: true
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                                stacked: true,
+                            }],
+                        yAxes: [{
+                                stacked: true
+                            }]
+                    }
+                }
+            });
+        }
+    };
+    HomeComponent.prototype.chart2 = function () {
+        var ctx = document.getElementsByClassName("chart-area");
+        var config = {
+            type: 'funnel',
+            data: {
+                datasets: [{
+                        data: [30, 60, 90],
+                        backgroundColor: [
+                            "#FF6384",
+                            "#36A2EB",
+                            "#FFCE56"
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF6384",
+                            "#36A2EB",
+                            "#FFCE56"
+                        ]
+                    }],
+                labels: [
+                    "Red",
+                    "Blue",
+                    "Yellow"
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Acreditación UM'
+                },
+                tooltips: {
+                    enabled: true
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        };
+        for (var i = 0; i < ctx.length; i++) {
+            new Chart(ctx[i], config);
+        }
+    };
+    HomeComponent.prototype.chart3 = function () {
+        var chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        var ctx = document.getElementById("chart-pie");
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                        data: [10, 20, 30],
+                        backgroundColor: [
+                            chartColors.red,
+                            chartColors.orange,
+                            chartColors.yellow,
+                            chartColors.green,
+                            chartColors.blue,
+                        ],
+                        label: 'Dataset 1'
+                    }],
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                    'Red',
+                    'Yellow',
+                    'Blue'
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Acreditación UM'
+                },
+                tooltips: {
+                    enabled: true
+                },
+                responsive: true
+            }
+        });
+    };
+    HomeComponent.prototype.componentDidMount = function () {
+        this.chart();
+        this.chart2();
+        this.chart3();
+    };
     HomeComponent.prototype.render = function () {
         return (React.createElement("div", { className: "main-container" },
             React.createElement("div", { className: "column1" },
@@ -28573,7 +28735,7 @@ var HomeComponent = /** @class */ (function (_super) {
                                 React.createElement(react_bootstrap_1.Col, { xs: 12, md: 4 },
                                     React.createElement(Filter_1.FilterComponent, { label: "Universidades", data: this.state.universities, onChange: this.onFilterChange.bind(this) })))))),
                 React.createElement("br", null),
-                React.createElement("div", { className: "cone-chart chart" }, "Cone Chart")),
+                React.createElement("canvas", { className: "cone-chart chart chart-area" })),
             React.createElement("div", { className: "column2" },
                 React.createElement("p", null, "Matriculados 1er curso"),
                 React.createElement(react_bootstrap_1.Grid, null,
@@ -28587,7 +28749,7 @@ var HomeComponent = /** @class */ (function (_super) {
                                 React.createElement(react_bootstrap_1.Col, { xs: 12, md: 4 },
                                     React.createElement(Filter_1.FilterComponent, { label: "Universidades", data: this.state.universities, onChange: this.onFilterChange.bind(this) })))))),
                 React.createElement("br", null),
-                React.createElement("div", { className: "cone-chart chart" }, "Cone Chart")),
+                React.createElement("canvas", { className: "cone-chart chart chart-area" })),
             React.createElement("div", { className: "column3" },
                 React.createElement("p", null, "Conteo total matriculados"),
                 React.createElement(react_bootstrap_1.Grid, null,
@@ -28601,7 +28763,7 @@ var HomeComponent = /** @class */ (function (_super) {
                                 React.createElement(react_bootstrap_1.Col, { xs: 12, md: 4 },
                                     React.createElement(Filter_1.FilterComponent, { label: "Universidades", data: this.state.universities, onChange: this.onFilterChange.bind(this) })))))),
                 React.createElement("br", null),
-                React.createElement("div", { className: "stacked-chart chart" }, "Stacked")),
+                React.createElement("canvas", { className: "cone-chart chart myChart" })),
             React.createElement("div", { className: "column4" },
                 React.createElement("p", null, "Conteo total matriculados"),
                 React.createElement(react_bootstrap_1.Grid, null,
@@ -28615,7 +28777,7 @@ var HomeComponent = /** @class */ (function (_super) {
                                 React.createElement(react_bootstrap_1.Col, { xs: 12, md: 4 },
                                     React.createElement(Filter_1.FilterComponent, { label: "Universidades", data: this.state.universities, onChange: this.onFilterChange.bind(this) })))))),
                 React.createElement("br", null),
-                React.createElement("div", { className: "stacked-chart chart" }, "Stacked")),
+                React.createElement("canvas", { className: "cone-chart chart myChart" })),
             React.createElement("div", { className: "column5" },
                 React.createElement("p", null, "Matriculados por departamento"),
                 React.createElement(react_bootstrap_1.Grid, null,
@@ -28629,7 +28791,7 @@ var HomeComponent = /** @class */ (function (_super) {
                                 React.createElement(react_bootstrap_1.Col, { xs: 12, md: 4 },
                                     React.createElement(Filter_1.FilterComponent, { label: "Universidades", data: this.state.universities, onChange: this.onFilterChange.bind(this) })))))),
                 React.createElement("br", null),
-                React.createElement("div", { className: "pie-chart chart" }, "Pie"),
+                React.createElement("canvas", { id: "chart-pie", className: "cone-chart chart" }),
                 React.createElement("br", null),
                 React.createElement(Matrix_1.MatrixComponent, { label: "Matriz de variaci\u00F3n de matr\u00EDculas", universities: this.state.universities, years: this.state.years }),
                 React.createElement("br", null),
