@@ -2,8 +2,7 @@ import * as React from "react";
 import {
     Grid,
     Row,
-    Col,
-    Table
+    Col
 } from 'react-bootstrap';
 
 import {
@@ -12,6 +11,8 @@ import {
 } from "../../models";
 import { FilterComponent } from '../filter/Filter';
 import { MatrixComponent } from '../matrix/Matrix';
+
+declare let Chart: any;
 
 export class HomeComponent extends React.Component<any, AppState> {
 
