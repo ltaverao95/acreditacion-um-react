@@ -6,6 +6,7 @@ class KeyValue {
 interface ICommonProps {
     label: string;
     data?: Array<KeyValue>;
+    indexKey?: number;
     onChange?: (data: Array<KeyValue>) => void;
 }
 

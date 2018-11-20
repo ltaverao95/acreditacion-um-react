@@ -133,13 +133,13 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                         <Col xs={12} md={12}>
                             <Row className="show-grid">
                                 <Col xs={12} md={4}>
-                                    <FilterComponent label="Años" data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                                    <FilterComponent label="Años" indexKey={this.props.indexKey == 2 ? 10 : 7} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
                                 </Col>
                                 <Col xs={12} md={4}>
-                                    <FilterComponent label="Periodos" data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                                    <FilterComponent label="Periodos" indexKey={this.props.indexKey == 2 ? 11 : 8} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
                                 </Col>
                                 <Col xs={12} md={4}>
-                                    <FilterComponent label="Universidades" data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
+                                    <FilterComponent label="Universidades" indexKey={this.props.indexKey == 2 ? 12 : 9} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
                                 </Col>
                             </Row>
                         </Col>

@@ -52,14 +52,14 @@ export class FilterComponent extends React.Component<ICommonProps, State> {
     render() {
         return (
             <div>
-                <Button id="Popover1" onClick={this.onFilterClick}>
+                <Button id={"Popover-" + this.props.indexKey} onClick={this.onFilterClick}>
                     {this.props.label}
                     <Glyphicon glyph="filter" />
                 </Button>
 
                 <Popover placement="bottom" 
                          isOpen={this.state.popoverOpen} 
-                         target="Popover1" 
+                         target={"Popover-" + this.props.indexKey} 
                          toggle={this.onFilterClick}
                          className="popoverStyle">
                     <PopoverHeader>{this.props.label}</PopoverHeader>
