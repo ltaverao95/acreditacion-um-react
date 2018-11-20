@@ -58,7 +58,6 @@ footer{
     background-color: #22222a;
     min-height: 100px;
 }
-
 .popoverStyle{
     min-width: 200px;
     min-height: 100px;
@@ -98,6 +97,10 @@ footer{
         border-left: none;
         border-bottom: solid 1px rgba(255,255,255,.15);
     }
+    .filter-container{
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
 }
 @media screen and (max-width: 768px){
     .column1,
@@ -116,6 +119,10 @@ footer{
     }
     header .top ul li a{
         border-left: 1px solid transparent;
+    }
+    .filter-container{
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 }
 @media screen and (min-width: 768px) and (max-width: 1066px){
