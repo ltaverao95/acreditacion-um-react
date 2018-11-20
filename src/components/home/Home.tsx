@@ -52,35 +52,43 @@ export class HomeComponent extends React.Component<any, undefined> {
                         </nav>
                     </div>
                 </header>
-                    <div className="main-container">
-                        <div className="column1">
-                            <UMMatriculadosPrimerCursoChart indexKey={1} />
-                        </div>
-                        <div className="column2">
-                            <UMMatriculadosPrimerCursoChart indexKey={2} />
-                        </div>
-                        <div className="column3">
-                            <UMConteoTotalMatriculadosChart indexKey={1} />
-                        </div>
-                        <div className="column4">
-                            <UMConteoTotalMatriculadosChart indexKey={2} />
-                        </div>
-                        <div className="column5">
-                            <UMMatriculadosDepartamentoChart indexKey={1} />
-
-                            <br />
-
-                            <MatrixComponent label="Matriz de variación de matrículas" />
-
-                            <br />
-
-                            <MatrixComponent label="Matriz de totales matrículas" />
-                        </div>
+                <div className="main-container">
+                    <div className="column1">
+                        <UMMatriculadosPrimerCursoChart indexKey={1} />
                     </div>
-                    <footer>
+                    <div className="column2">
 
-                    </footer>
+                    </div>
+                    <div className="column3">
+                        <UMMatriculadosPrimerCursoChart indexKey={2} />
+                    </div>
+                    <div className="column4">
+                        <UMConteoTotalMatriculadosChart indexKey={1} />
+                    </div>
+                    <div className="column5">
+
+                    </div>
+                    <div className="column6">
+                        <UMConteoTotalMatriculadosChart indexKey={2} />
+                    </div>
+                    <div className="column7">
+                        <UMMatriculadosDepartamentoChart indexKey={1} />
+
+                        <br />
+
+                        <MatrixComponent label="Matriz de variación de matrículas" />
+
+                        <br />
+
+                        <MatrixComponent label="Matriz de totales matrículas" />
+                    </div>
+                    <div className="column8"></div>
+                    <div className="column9"></div>
+                </div>
+                <footer>
+
+                </footer>
             </div>
-                );
-            }
+        );
+    }
 }
