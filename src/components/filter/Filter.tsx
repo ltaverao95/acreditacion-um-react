@@ -1,8 +1,6 @@
 import * as React from "react";
 import Select from 'react-select';
 import {
-    ButtonToolbar,
-    ButtonGroup,
     Glyphicon
 } from "react-bootstrap";
 
@@ -53,7 +51,7 @@ export class FilterComponent extends React.Component<ICommonProps, State> {
         return (
             <div>
                 <Button id={"Popover-" + this.props.indexKey} onClick={this.onFilterClick}>
-                    {this.props.label}
+                    {this.props.label} &nbsp;
                     <Glyphicon glyph="filter" />
                 </Button>
 

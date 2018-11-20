@@ -1,9 +1,4 @@
 import * as React from "react";
-import {
-    Grid,
-    Row,
-    Col
-} from 'react-bootstrap';
 
 import {
     KeyValue,
@@ -107,23 +102,17 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
             <div>
                 <p>Matriculados por departamento</p>
 
-                <Grid>
-                    <Row className="show-grid">
-                        <Col xs={12} md={12}>
-                            <Row className="show-grid">
-                                <Col xs={12} md={4}>
-                                    <FilterComponent label="Años" indexKey={13} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
-                                </Col>
-                                <Col xs={12} md={4}>
-                                    <FilterComponent label="Periodos" indexKey={14} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
-                                </Col>
-                                <Col xs={12} md={4}>
-                                    <FilterComponent label="Universidades" indexKey={15} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Grid>
+                <div className="filter-container">
+                    <div className="filter-item">
+                        <FilterComponent label="Años" indexKey={13} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                    </div>
+                    <div className="filter-item">
+                        <FilterComponent label="Periodos" indexKey={14} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                    </div>
+                    <div className="filter-item">
+                        <FilterComponent label="Universidades" indexKey={15} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
+                    </div>
+                </div>
 
                 <br />
 
