@@ -5,26 +5,23 @@ import {
 
 import {
     KeyValue,
-    CommonProps
+    IMatrixProps,
+    IMatrixState
 } from "../../models";
+import { MatrixServices } from "../../services/MatrixServices";
 
-interface MatrixProps {
-    label: string;
-    years: Array<KeyValue>;
-    universities: Array<KeyValue>;
-}
+let matrixService: MatrixServices = new MatrixServices();
 
-export class MatrixComponent extends React.Component<MatrixProps, undefined> {
+export class MatrixComponent extends React.Component<IMatrixProps, IMatrixState> {
 
-    constructor(props: MatrixProps) {
+    constructor(props: IMatrixProps) {
         super(props);
 
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange() {
-
-
+        this.state = {
+            universities: matrixService.getMatrixUniversities(),
+            years: matrixService.getMatrixYears(),
+            data: matrixService.getMatrixData()
+        };
     }
 
     render() {
@@ -37,7 +34,7 @@ export class MatrixComponent extends React.Component<MatrixProps, undefined> {
                         <tr>
                             <th>Universidad</th>
                             {
-                                this.props.years.map((x: KeyValue, index: number) => {
+                                this.state.years.map((x: KeyValue, index: number) => {
                                     if (x.value != 'select_all') {
                                         return <th key={index}>{x.label}</th>
                                     }
@@ -47,18 +44,12 @@ export class MatrixComponent extends React.Component<MatrixProps, undefined> {
                     </thead>
                     <tbody>
                         {
-                            this.props.universities.map((university: KeyValue, index: number) => {
+                            this.state.universities.map((university: KeyValue, index: number) => {
                                 if (university.value != 'select_all') {
                                     return (
                                         <tr key={index}>
                                             <td key={index}>{university.label}</td>
-                                            {
-                                                this.props.years.map((x, index) => {
-                                                    if (x.value != 'select_all') {
-                                                        return <td key={index}>{x.label}</td>
-                                                    }
-                                                })
-                                            }
+                                            {this.state.data.map((x: KeyValue, index: number) => <td key={index}>{x.label}</td>)}
                                         </tr>
                                     );
                                 }

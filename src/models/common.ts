@@ -3,20 +3,42 @@ class KeyValue {
     public label: string;
 }
 
-interface CommonProps {
+interface ICommonProps {
     label: string;
     data?: Array<KeyValue>;
     onChange?: (data: Array<KeyValue>) => void;
 }
 
-interface AppState {
+interface IFilterState {
     years: Array<KeyValue>;
     periods: Array<KeyValue>;
     universities: Array<KeyValue>;
 }
 
+interface IUMChartProps{
+    indexKey?: number;
+}
+
+interface IUMChartState{
+    filterData?: IFilterState
+}
+
+interface IMatrixProps {
+    label: string;
+}
+
+interface IMatrixState {
+    years: Array<KeyValue>;
+    universities: Array<KeyValue>;
+    data: Array<KeyValue>;
+}
+
 export {
     KeyValue,
-    CommonProps,
-    AppState
+    ICommonProps,
+    IFilterState,
+    IUMChartProps,
+    IUMChartState,
+    IMatrixProps,
+    IMatrixState
 }

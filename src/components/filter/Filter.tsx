@@ -1,11 +1,14 @@
 import * as React from "react";
 import Select from 'react-select';
 
-import { KeyValue, CommonProps } from "../../models";
+import { 
+    KeyValue, 
+    ICommonProps
+} from "../../models";
 
-export class FilterComponent extends React.Component<CommonProps, undefined> {
+export class FilterComponent extends React.Component<ICommonProps, undefined> {
 
-    constructor(props: CommonProps) {
+    constructor(props: ICommonProps) {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
