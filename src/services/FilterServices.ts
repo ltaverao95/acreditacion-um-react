@@ -1,3 +1,5 @@
+import axios, { AxiosPromise } from 'axios';
+
 import { KeyValue } from "../models";
 
 export class FilterServices {
@@ -36,11 +38,7 @@ export class FilterServices {
         return this._periodsList;
     }
 
-    getFilterUniversities() {
-        return this._universitiesList;
-    }
-
-    changeYearsData(data: Array<KeyValue>) {
-        this._yearsList[1].label = data[1].label;
+    getFilterUniversities(): AxiosPromise {
+        return axios.get("http://localhost:81/acreditacion-um-react/src/server/api/GetInstituciones.php");
     }
 }

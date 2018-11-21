@@ -1,4 +1,5 @@
 import * as React from "react";
+import { AxiosResponse } from 'axios';
 
 import {
     KeyValue,
@@ -24,7 +25,7 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
             filterData: {
                 years: filterService.getFilterYears(),
                 periods: filterService.getFilterPeriods(),
-                universities: filterService.getFilterUniversities()
+                universities: []
             }
         };
 
@@ -36,6 +37,25 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
     componentDidMount() {
 
         this.renderChart();
+
+        filterService.getFilterUniversities().then(
+            (res: AxiosResponse) => {
+               let universities: Array<KeyValue> = res.data.ResultData.map((x: any) => {
+                    return {
+                        label: x.Nombre,
+                        value: x.Codigo
+                    }
+               });
+
+               this.setState({
+                   filterData: {
+                       universities: universities,
+                       periods: this.state.filterData.periods,
+                       years: this.state.filterData.years
+                   }
+               });
+            }
+        );
     }
 
     renderChart() {
