@@ -36,7 +36,7 @@ header .main-nav{
 .main-container{
     display: grid;
     flex: 1;
-    grid-template-columns: 1fr 50px 1fr;
+    grid-template-columns: 1fr 30px 1fr;
     grid-template-rows: repeat(3, auto);
     grid-row-gap: 25px;
 }
