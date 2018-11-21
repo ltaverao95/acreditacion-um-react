@@ -3,8 +3,12 @@ import Select from 'react-select';
 import {
     Glyphicon
 } from "react-bootstrap";
-
-import { Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
+import { 
+    Button, 
+    Popover, 
+    PopoverHeader, 
+    PopoverBody 
+} from 'reactstrap';
 
 import {
     KeyValue,
@@ -50,7 +54,7 @@ export class FilterComponent extends React.Component<ICommonProps, State> {
     render() {
         return (
             <div>
-                <Button id={"Popover-" + this.props.indexKey} onClick={this.onFilterClick}>
+                <Button id={"Popover-" + this.props.indexKey} outline color="secondary" onClick={this.onFilterClick}>
                     {this.props.label} &nbsp;
                     <Glyphicon glyph="filter" />
                 </Button>
@@ -60,9 +64,10 @@ export class FilterComponent extends React.Component<ICommonProps, State> {
                          target={"Popover-" + this.props.indexKey} 
                          toggle={this.onFilterClick}
                          className="popoverStyle">
-                    <PopoverHeader>{this.props.label}</PopoverHeader>
+                    <PopoverHeader className="popover-header">{this.props.label}</PopoverHeader>
                     <PopoverBody>
                         <Select
+                            defaultValue={this.props.selectedData}
                             onChange={this.handleChange}
                             options={this.props.data}
                             isMulti={true}

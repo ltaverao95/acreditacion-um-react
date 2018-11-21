@@ -6,6 +6,7 @@ class KeyValue {
 interface ICommonProps {
     label: string;
     data?: Array<KeyValue>;
+    selectedData?: Array<KeyValue>;
     indexKey?: number;
     onChange?: (data: Array<KeyValue>) => void;
 }
@@ -22,6 +23,7 @@ interface IUMChartProps{
 
 interface IUMChartState{
     filterData?: IFilterState
+    selectedData?: IFilterState
 }
 
 interface IMatrixProps {

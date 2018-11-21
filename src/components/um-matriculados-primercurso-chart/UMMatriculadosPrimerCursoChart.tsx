@@ -26,6 +26,11 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 years: filterService.getFilterYears(),
                 periods: filterService.getFilterPeriods(),
                 universities: []
+            },
+            selectedData: {
+                years: [],
+                periods: [],
+                universities: []
             }
         };
 
@@ -89,7 +94,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 },
                 title: {
                     display: true,
-                    text: 'Acreditación UM'
+                    text: 'Matriculados 1er curso'
                 },
                 tooltips: {
                     enabled: true
@@ -106,31 +111,47 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
     }
 
     onYearsFilterChange(data: Array<KeyValue>) {
-        console.log(data);
+        this.setState({
+            selectedData: {
+                years: data,
+                periods: this.state.selectedData.periods,
+                universities: this.state.selectedData.universities
+            }
+        });
     }
 
     onPeriodsFilterChange(data: Array<KeyValue>) {
-        console.log(data);
+        this.setState({
+            selectedData: {
+                years: this.state.selectedData.years,
+                periods: data,
+                universities: this.state.selectedData.universities
+            }
+        });
     }
 
     onUniversitiesFilterChange(data: Array<KeyValue>) {
-        console.log(data);
+        this.setState({
+            selectedData: {
+                years: this.state.selectedData.years,
+                periods: this.state.selectedData.periods,
+                universities: data
+            }
+        });
     }
 
     render() {
         return (
             <div>
-                <p>Matriculados 1er curso</p>
-
                 <div className="filter-container">
                     <div className="filter-item">
-                        <FilterComponent label="Años" indexKey={this.props.indexKey == 2 ? 4 : 1} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                        <FilterComponent label="Años" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 4 : 1} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodos" indexKey={this.props.indexKey == 2 ? 5 : 2} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Periodos" selectedData={this.state.selectedData.periods} indexKey={this.props.indexKey == 2 ? 5 : 2} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Universidades" indexKey={this.props.indexKey == 2 ? 6 : 3} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
+                        <FilterComponent label="Universidades" selectedData={this.state.selectedData.universities} indexKey={this.props.indexKey == 2 ? 6 : 3} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
                     </div>
                 </div>
 

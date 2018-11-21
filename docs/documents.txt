@@ -1,17 +1,8 @@
 https://github.com/chartjs/Chart.js
 https://www.npmjs.com/package/chartjs-funnel
 
-titulo del filtro en el popover está muy grande
 boton de aplicar debajo de cada filtro
 botones de filtros cambiar color
-conservar el estado del filtro (mirar eventos)
-	selectedData: {
-		years: [],
-		periods: [],
-		universities: []
-	}
-labels dentro de la gráfica (quitar los labels principales del componente)
-consumir json para obtener url del backend (montar servicio)
-quitar título de conteo total matriculados y ponerlo dentro de la grafica
-espacio entre componentes (gap: 40)
+labels dentro de la gráfica															
 id componente del padre anios_map_por_depto (para id's del popover)
+montar react-select-plus

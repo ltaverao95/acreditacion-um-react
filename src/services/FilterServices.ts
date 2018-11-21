@@ -1,12 +1,20 @@
 import axios, { AxiosPromise } from 'axios';
 
 import { KeyValue } from "../models";
+import {
+    ConfigService
+} from './ConfigService';
+import {
+    UtilsConstants
+} from '../utils/constants';
 
 export class FilterServices {
 
+    private _configService = new ConfigService();
+
     private _yearsList: Array<KeyValue>;
     private _periodsList: Array<KeyValue>;
-    private _universitiesList: Array<KeyValue>;
+    private _serverURL: string;
 
     constructor() {
         this._yearsList = [
@@ -22,12 +30,7 @@ export class FilterServices {
             { value: 'p2', label: '2' }
         ];
 
-        this._universitiesList = [
-            { value: 'select_all', label: 'Seleccionar Todo' },
-            { value: 'u_manizales', label: 'U. Manizales' },
-            { value: 'u_autonoma', label: 'U. Autónoma' },
-            { value: 'u_caldas', label: 'U. Caldas' }
-        ];
+        this._serverURL = this._configService.GetAttribute(UtilsConstants.ConfigAttributes.BackendURL);
     }
 
     getFilterYears() {
@@ -39,6 +42,7 @@ export class FilterServices {
     }
 
     getFilterUniversities(): AxiosPromise {
-        return axios.get("http://localhost:81/acreditacion-um-react/server/api/GetInstituciones.php");
+        console.log(this._serverURL);
+        return axios.get(this._serverURL + "GetInstituciones.php");
     }
 }

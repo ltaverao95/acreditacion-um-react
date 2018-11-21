@@ -38,7 +38,7 @@ header .main-nav{
     flex: 1;
     grid-template-columns: 1fr 30px 1fr;
     grid-template-rows: repeat(3, auto);
-    grid-row-gap: 25px;
+    grid-row-gap: 50px;
 }
 .column7{
     grid-column: 1 / 4;
@@ -66,6 +66,14 @@ footer{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
+}
+.popover-header{
+    font-size: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+.popover-body{
+    padding: 0.5em;
 }
 
 /*Media Queries*/
