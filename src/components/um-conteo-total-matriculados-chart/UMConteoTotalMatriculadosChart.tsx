@@ -70,34 +70,30 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
     renderChart() {
         let barChartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: 'Pregrado',
-                backgroundColor: "rgb(255, 99, 132)",
-                data: [
-                    -49,
-                    23,
-                    85,
-                    -76,
-                    54,
-                    26,
-                    74
-                ]
-            }, {
-                label: 'Posgrado',
-                backgroundColor: "rgb(54, 162, 235)",
-                data: [
-                    89
-                    - 67,
-                    84,
-                    12,
-                    90,
-                    39,
-                    -92
-                ]
-            }]
-
-        }
+            labels: ['2014', '2015', '2016', '2017'],
+            datasets: [
+                {
+                    label: 'Pregrado',
+                    backgroundColor: "rgb(255, 99, 132)",
+                    data: [
+                        10,
+                        20,
+                        30,
+                        40
+                    ]
+                },
+                {
+                    label: 'Posgrado',
+                    backgroundColor: "rgb(54, 162, 235)",
+                    data: [
+                        90,
+                        80,
+                        70,
+                        60
+                    ]
+                }
+            ]
+        };
 
         let ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
         new Chart(ctx, {
