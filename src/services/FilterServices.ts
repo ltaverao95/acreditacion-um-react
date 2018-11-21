@@ -39,6 +39,6 @@ export class FilterServices {
     }
 
     getFilterUniversities(): AxiosPromise {
-        return axios.get("http://localhost:81/acreditacion-um-react/src/server/api/GetInstituciones.php");
+        return axios.get("http://localhost:81/acreditacion-um-react/server/api/GetInstituciones.php");
     }
 }
