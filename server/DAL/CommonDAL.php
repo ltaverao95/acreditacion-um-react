@@ -14,7 +14,8 @@
                     return $responseDTO;
                 }
 
-                $query = "SELECT * FROM \"UAMSNIES\".cmn_depto";
+                $query = "select d.depto_codigo, d.depto_nombre
+                from cmn_depto d";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
@@ -71,7 +72,7 @@
                     return $responseDTO;
                 }
 
-                $query = "SELECT * FROM \"UAMSNIES\".cmn_institucion";
+                $query = "select i.ins_codigo, i.ins_nombre from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_institucion i on i.ins_codigo = b.codigo_institucion inner join \"UAMSNIES\".cmn_depto d on d.depto_codigo = b.codigo_depto_programa where d.depto_codigo in ('17', '63', '66') group by i.ins_codigo, i.ins_nombre";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
@@ -92,7 +93,6 @@
                 {
                     $institucionDTO = new InstitucionDTO();
                     $institucionDTO->Codigo = $row['ins_codigo'];
-                    $institucionDTO->CodigoPadre = $row['ins_codigo_padre'];
                     $institucionDTO->Nombre = $row['ins_nombre'];
                     
                     array_push($itemsList, $institucionDTO);

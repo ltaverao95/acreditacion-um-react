@@ -45,20 +45,26 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
         filterService.getFilterUniversities().then(
             (res: AxiosResponse) => {
-               let universities: Array<KeyValue> = res.data.ResultData.map((x: any) => {
+
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                let universities: Array<KeyValue> = res.data.ResultData.map((x: any) => {
                     return {
                         label: x.Nombre,
                         value: x.Codigo
                     }
-               });
+                });
 
-               this.setState({
-                   filterData: {
-                       universities: universities,
-                       periods: this.state.filterData.periods,
-                       years: this.state.filterData.years
-                   }
-               });
+                this.setState({
+                    filterData: {
+                        universities: universities,
+                        periods: this.state.filterData.periods,
+                        years: this.state.filterData.years
+                    }
+                });
             }
         );
     }

@@ -45,20 +45,25 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         filterService.getFilterUniversities().then(
             (res: AxiosResponse) => {
-               let universities: Array<KeyValue> = res.data.ResultData.map((x: any) => {
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                let universities: Array<KeyValue> = res.data.ResultData.map((x: any) => {
                     return {
                         label: x.Nombre,
                         value: x.Codigo
                     }
-               });
+                });
 
-               this.setState({
-                   filterData: {
-                       universities: universities,
-                       periods: this.state.filterData.periods,
-                       years: this.state.filterData.years
-                   }
-               });
+                this.setState({
+                    filterData: {
+                        universities: universities,
+                        periods: this.state.filterData.periods,
+                        years: this.state.filterData.years
+                    }
+                });
             }
         );
     }
@@ -67,7 +72,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         let barChartData = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
-                label: 'Dataset 1',
+                label: 'Pregrado',
                 backgroundColor: "rgb(255, 99, 132)",
                 data: [
                     -49,
@@ -79,7 +84,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     74
                 ]
             }, {
-                label: 'Dataset 2',
+                label: 'Posgrado',
                 backgroundColor: "rgb(54, 162, 235)",
                 data: [
                     89
@@ -89,18 +94,6 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     90,
                     39,
                     -92
-                ]
-            }, {
-                label: 'Dataset 3',
-                backgroundColor: "rgb(75, 192, 192)",
-                data: [
-                    -20,
-                    21,
-                    58,
-                    85,
-                    -86,
-                    -53,
-                    91
                 ]
             }]
 

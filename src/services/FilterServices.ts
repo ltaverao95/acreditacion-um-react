@@ -42,7 +42,6 @@ export class FilterServices {
     }
 
     getFilterUniversities(): AxiosPromise {
-        console.log(this._serverURL);
-        return axios.get(this._serverURL + "GetInstituciones.php");
+        return axios.get(this._serverURL + "api/GetInstituciones.php");
     }
 }
