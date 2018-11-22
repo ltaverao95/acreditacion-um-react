@@ -15,11 +15,11 @@ import {
     ICommonProps
 } from "../../models";
 
-interface State {
+interface Ownstate {
     popoverOpen: boolean;
 }
 
-export class FilterComponent extends React.Component<ICommonProps, State> {
+export class FilterComponent extends React.Component<ICommonProps, Ownstate> {
 
     constructor(props: ICommonProps) {
         super(props);
