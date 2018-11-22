@@ -6,3 +6,63 @@ botones de filtros cambiar color
 labels dentro de la gráfica															
 id componente del padre anios_map_por_depto (para id's del popover)
 montar react-select-plus
+
+
+QUERIES:
+
+-- matriculados 1er semestre
+
+select inscritos, 100 pct_inscritos, admitidos, cast((cast(admitidos as decimal)/cast(inscritos as decimal))*100 as decimal(18,2)) pct_admitidos, matriculados, cast((cast(matriculados as decimal)/cast(admitidos as decimal))*100 as decimal(18,2)) pct_matriculados
+from (
+	select 
+	(
+	select sum(dato) dato
+	from base_poblacion_estudiantil b
+	inner join cmn_institucion i on i.ins_codigo = b.codigo_institucion
+	where b.anio in (2014,2015)
+	and b.semestre in (1,2)
+	and i.ins_codigo in ('1101','1102','1117')
+	and b.tipo = 1
+	) inscritos,
+	(
+	select sum(dato) dato
+	from base_poblacion_estudiantil b
+	inner join cmn_institucion i on i.ins_codigo = b.codigo_institucion
+	where b.anio in (2014,2015)
+	and b.semestre in (1,2)
+	and i.ins_codigo in ('1101','1102','1117')
+	and b.tipo = 2
+	) admitidos,
+	(
+	select sum(dato) dato
+	from base_poblacion_estudiantil b
+	inner join cmn_institucion i on i.ins_codigo = b.codigo_institucion
+	where b.anio in (2014,2015)
+	and b.semestre in (1,2)
+	and i.ins_codigo in ('1101','1102','1117')
+	and b.tipo = 3
+	) matriculados
+) d
+
+-- Conteo total matriculados
+select b.anio, pp.list_codigo, pp.list_nombre pp_nombre, sum(b.dato) dato, cast((cast(sum(b.dato) as decimal)/cast(anio.dato as decimal))*100 as decimal(18,2)) pct_dato
+from base_poblacion_estudiantil b
+inner join cmn_institucion i on i.ins_codigo = b.codigo_institucion
+inner join cmn_listas pp on pp.list_tipo = 'NIVEL_ACADEMICO' and pp.list_codigo = b.id_nivel_academico
+inner join (
+	select b.anio, sum(dato) dato
+	from base_poblacion_estudiantil b
+	inner join cmn_institucion i on i.ins_codigo = b.codigo_institucion
+	inner join cmn_listas pp on pp.list_tipo = 'NIVEL_ACADEMICO' and pp.list_codigo = b.id_nivel_academico
+	where b.anio in (2014,2015)
+	and b.semestre in (1,2)
+	and i.ins_codigo in ('1101','1102','1117')
+	and b.tipo = 3
+	group by b.anio
+) anio on anio.anio = b.anio
+where b.anio in (2014,2015)
+and b.semestre in (1,2)
+and i.ins_codigo in ('1101','1102','1117')
+and b.tipo = 3
+group by b.anio, pp.list_codigo, pp.list_nombre, anio.anio, anio.dato
+order by 1,2 
