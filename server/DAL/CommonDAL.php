@@ -213,6 +213,8 @@
                 select inscritos, 100 pct_inscritos, admitidos, cast((cast(admitidos as decimal)/cast(inscritos as decimal))*100 as decimal(18,2)) pct_admitidos, matriculados, cast((cast(matriculados as decimal)/cast(admitidos as decimal))*100 as decimal(18,2)) pct_matriculados from ( select ( select sum(dato) dato from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_institucion i on i.ins_codigo = b.codigo_institucion where b.anio in :years and b.semestre in :periods and i.ins_codigo in :universities_code and b.tipo = 1 ) inscritos, ( select sum(dato) dato from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_institucion i on i.ins_codigo = b.codigo_institucion where b.anio in :years and b.semestre in :periods and i.ins_codigo in :universities_code and b.tipo = 2 ) admitidos, ( select sum(dato) dato from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_institucion i on i.ins_codigo = b.codigo_institucion where b.anio in :years and b.semestre in :periods and i.ins_codigo in :universities_code and b.tipo = 3 ) matriculados ) d 
 EOT;
 
+echo $query;
+
 
                 $dataBaseServicesBLL->ArrayParameters = array(
                     ':years' => $stringYears,
