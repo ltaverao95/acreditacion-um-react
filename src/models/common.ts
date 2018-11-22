@@ -15,6 +15,7 @@ interface IFilterState {
     years: Array<KeyValue>;
     periods: Array<KeyValue>;
     universities: Array<KeyValue>;
+    departments?: Array<KeyValue>;
 }
 
 interface IUMChartProps{

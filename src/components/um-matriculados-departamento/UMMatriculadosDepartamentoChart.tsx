@@ -25,12 +25,14 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
             filterData: {
                 years: filterService.getFilterYears(),
                 periods: filterService.getFilterPeriods(),
-                universities: []
+                universities: [],
+                departments: []
             },
             selectedData: {
                 years: [],
                 periods: [],
-                universities: []
+                universities: [],
+                departments: []
             }
         };
 
@@ -145,18 +147,29 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
         });
     }
 
+    onDepartmentsFilterChange(data: Array<KeyValue>) {
+        this.setState({
+            selectedData: {
+                years: this.state.selectedData.years,
+                periods: this.state.selectedData.periods,
+                universities: this.state.selectedData.universities,
+                departments: this.state.selectedData.departments
+            }
+        });
+    }
+
     render() {
         return (
             <div>
                 <div className="filter-container">
                     <div className="filter-item">
-                        <FilterComponent label="Departamento" selectedData={this.state.selectedData.years} indexKey={13} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                        <FilterComponent label="Departamento" selectedData={this.state.selectedData.departments} indexKey={13} data={this.state.filterData.departments} onChange={this.onDepartmentsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Año" selectedData={this.state.selectedData.periods} indexKey={14} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Año" selectedData={this.state.selectedData.years} indexKey={14} data={this.state.filterData.years} onChange={this.onPeriodsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.universities} indexKey={15} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
+                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.periods} indexKey={15} data={this.state.filterData.periods} onChange={this.onUniversitiesFilterChange} />
                     </div>
                 </div>
 
