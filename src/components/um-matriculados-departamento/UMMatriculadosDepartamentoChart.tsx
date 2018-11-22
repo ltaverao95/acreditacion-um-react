@@ -23,45 +23,79 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
 
         this.state = {
             filterData: {
-                years: filterService.getFilterYears(),
+                years: [],
                 periods: filterService.getFilterPeriods(),
-                universities: [],
                 departments: []
             },
             selectedData: {
                 years: [],
                 periods: [],
-                universities: [],
                 departments: []
             }
         };
 
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
         this.onPeriodsFilterChange = this.onPeriodsFilterChange.bind(this);
-        this.onUniversitiesFilterChange = this.onUniversitiesFilterChange.bind(this);
+        this.onDepartmentsFilterChange = this.onDepartmentsFilterChange.bind(this);
     }
 
     componentDidMount() {
 
         this.renderChart();
 
-        filterService.getFilterUniversities().then(
+        filterService.getFilterYears().then(
             (res: AxiosResponse) => {
+
                 if (!res.data ||
                     !res.data.ResultData) {
                     return;
                 }
 
-                let universities: Array<KeyValue> = res.data.ResultData.map((x: any) => {
+                let years: Array<KeyValue> = res.data.ResultData.map((x: any, index: number) => {
+                    return {
+                        label: x.Value,
+                        value: index
+                    }
+                });
+
+                years.unshift({
+                    label: 'Seleccionar Todo',
+                    value: 'select_all'
+                });
+
+                this.setState({
+                    filterData: {
+                        departments: this.state.filterData.departments,
+                        periods: this.state.filterData.periods,
+                        years: years
+                    }
+                });
+            }
+        );
+
+        filterService.getFilterDepartments().then(
+            (res: AxiosResponse) => {
+
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                let departments: Array<KeyValue> = res.data.ResultData.map((x: any) => {
                     return {
                         label: x.Nombre,
                         value: x.Codigo
                     }
                 });
 
+                departments.unshift({
+                    label: 'Seleccionar Todo',
+                    value: 'select_all'
+                });
+
                 this.setState({
                     filterData: {
-                        universities: universities,
+                        departments: departments,
                         periods: this.state.filterData.periods,
                         years: this.state.filterData.years
                     }
@@ -125,6 +159,13 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                 universities: this.state.selectedData.universities
             }
         });
+
+        let isSelectedAll = data.find(x => x.value == 'select_all');
+        if (isSelectedAll) {
+                data = this.state.filterData.years.filter(x => x.value != 'select_all');
+                console.log(data);
+            return;
+        }
     }
 
     onPeriodsFilterChange(data: Array<KeyValue>) {
@@ -135,16 +176,13 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                 universities: this.state.selectedData.universities
             }
         });
-    }
 
-    onUniversitiesFilterChange(data: Array<KeyValue>) {
-        this.setState({
-            selectedData: {
-                years: this.state.selectedData.years,
-                periods: this.state.selectedData.periods,
-                universities: data
-            }
-        });
+        let isSelectedAll = data.find(x => x.value == 'select_all');
+        if (isSelectedAll) {
+                data = this.state.filterData.periods.filter(x => x.value != 'select_all');
+                console.log(data);
+            return;
+        }
     }
 
     onDepartmentsFilterChange(data: Array<KeyValue>) {
@@ -152,10 +190,16 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
             selectedData: {
                 years: this.state.selectedData.years,
                 periods: this.state.selectedData.periods,
-                universities: this.state.selectedData.universities,
-                departments: this.state.selectedData.departments
+                departments: data
             }
         });
+
+        let isSelectedAll = data.find(x => x.value == 'select_all');
+        if (isSelectedAll) {
+                data = this.state.filterData.departments.filter(x => x.value != 'select_all');
+                console.log(data);
+            return;
+        }
     }
 
     render() {
@@ -166,10 +210,10 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                         <FilterComponent label="Departamento" selectedData={this.state.selectedData.departments} indexKey={13} data={this.state.filterData.departments} onChange={this.onDepartmentsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Año" selectedData={this.state.selectedData.years} indexKey={14} data={this.state.filterData.years} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Año" selectedData={this.state.selectedData.years} indexKey={14} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.periods} indexKey={15} data={this.state.filterData.periods} onChange={this.onUniversitiesFilterChange} />
+                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.periods} indexKey={15} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
                     </div>
                 </div>
 

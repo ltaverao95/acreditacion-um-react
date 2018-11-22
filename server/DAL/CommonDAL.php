@@ -15,7 +15,7 @@
                 }
 
                 $query = "select d.depto_codigo, d.depto_nombre
-                from cmn_depto d";
+                from \"UAMSNIES\".cmn_depto d";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
@@ -39,6 +39,64 @@
                     $departamentoDTO->Nombre = $row['depto_nombre'];
                     
                     array_push($itemsList, $departamentoDTO);
+                }
+
+                if($itemsList == null)
+                {
+                    $responseDTO->UIMessage = "No se encontraron registros para mostrar";
+                    return $responseDTO;
+                } 
+                
+                $responseDTO->ResultData = $itemsList;
+
+                $dataBaseServicesBLL->connection = null;
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+
+            return $responseDTO;
+        }
+
+        public function GetAnios()
+        {
+            $responseDTO = new ResponseDTO();
+            
+            try 
+            {
+                $dataBaseServicesBLL = new DataBaseServicesBLL();
+                $responseDTO = $dataBaseServicesBLL->InitializeDataBaseConnection();
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                $query = "select b.anio
+                from \"UAMSNIES\".base_poblacion_estudiantil b
+                group by b.anio";
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                //Recuperar los registros de la BD
+                $result = $dataBaseServicesBLL->Q->fetchAll();	
+                
+                if($result == null)
+                {
+                    $responseDTO->UIMessage = "No hay items para mostrar";
+                    return $responseDTO;
+                }
+
+                $itemsList = array();
+                while ($row = array_shift($result)) 
+                {
+                    $year = new Year();
+                    $year->Value = $row['anio'];
+                    
+                    array_push($itemsList, $year);
                 }
 
                 if($itemsList == null)

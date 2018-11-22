@@ -12,9 +12,9 @@ interface ICommonProps {
 }
 
 interface IFilterState {
-    years: Array<KeyValue>;
-    periods: Array<KeyValue>;
-    universities: Array<KeyValue>;
+    years?: Array<KeyValue>;
+    periods?: Array<KeyValue>;
+    universities?: Array<KeyValue>;
     departments?: Array<KeyValue>;
 }
 

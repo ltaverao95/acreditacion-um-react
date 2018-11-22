@@ -11,30 +11,21 @@ import {
 export class FilterServices {
 
     private _configService = new ConfigService();
-
-    private _yearsList: Array<KeyValue>;
-    private _periodsList: Array<KeyValue>;
     private _serverURL: string;
+    private _periodsList: Array<KeyValue>;
 
     constructor() {
-        this._yearsList = [
-            { value: 'select_all', label: 'Seleccionar Todo' },
-            { value: 'a2014', label: '2014' },
-            { value: 'a2015', label: '2015' },
-            { value: 'a2016', label: '2016' }
-        ];
-
         this._periodsList = [
             { value: 'select_all', label: 'Seleccionar Todo' },
-            { value: 'p1', label: '1' },
-            { value: 'p2', label: '2' }
+            { value: '1', label: '1' },
+            { value: '2', label: '2' }
         ];
 
         this._serverURL = this._configService.GetAttribute(UtilsConstants.ConfigAttributes.BackendURL);
     }
 
     getFilterYears() {
-        return this._yearsList;
+        return axios.get(this._serverURL + "api/GetAnios.php");
     }
 
     getFilterPeriods() {
@@ -43,5 +34,9 @@ export class FilterServices {
 
     getFilterUniversities(): AxiosPromise {
         return axios.get(this._serverURL + "api/GetInstituciones.php");
+    }
+
+    getFilterDepartments(): AxiosPromise {
+        return axios.get(this._serverURL + "api/GetDepartamentos.php");
     }
 }

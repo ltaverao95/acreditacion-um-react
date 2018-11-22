@@ -33,15 +33,6 @@ export class FilterComponent extends React.Component<ICommonProps, State> {
     }
 
     handleChange(selectedValues: Array<KeyValue>) {
-
-        let isSelectedAll = selectedValues.find(x => x.value == 'select_all');
-
-        if (selectedValues.length == 0 ||
-            isSelectedAll != undefined) {
-            this.props.onChange(this.props.data.filter(x => x.value != 'select_all'));
-            return;
-        }
-
         this.props.onChange(selectedValues);
     }
 

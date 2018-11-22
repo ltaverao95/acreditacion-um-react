@@ -18,6 +18,23 @@
             return $responseDTO;
         }
 
+        public function GetAnios()
+        {
+            $responseDTO = new ResponseDTO();
+	
+            try 
+            {
+                $commonDAL = new CommonDAL();
+                $responseDTO = $commonDAL->GetAnios();
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+            
+            return $responseDTO;
+        }
+
         public function GetInstituciones()
         {
             $responseDTO = new ResponseDTO();

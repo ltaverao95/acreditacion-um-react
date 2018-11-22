@@ -23,7 +23,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         this.state = {
             filterData: {
-                years: filterService.getFilterYears(),
+                years: [],
                 periods: filterService.getFilterPeriods(),
                 universities: []
             },
@@ -57,11 +57,46 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     }
                 });
 
+                universities.unshift({
+                    label: 'Seleccionar Todo',
+                    value: 'select_all'
+                });
+
                 this.setState({
                     filterData: {
                         universities: universities,
                         periods: this.state.filterData.periods,
                         years: this.state.filterData.years
+                    }
+                });
+            }
+        );
+
+        filterService.getFilterYears().then(
+            (res: AxiosResponse) => {
+
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                let years: Array<KeyValue> = res.data.ResultData.map((x: any, index: number) => {
+                    return {
+                        label: x.Value,
+                        value: index
+                    }
+                });
+
+                years.unshift({
+                    label: 'Seleccionar Todo',
+                    value: 'select_all'
+                });
+
+                this.setState({
+                    filterData: {
+                        universities: this.state.filterData.universities,
+                        periods: this.state.filterData.periods,
+                        years: years
                     }
                 });
             }
@@ -128,6 +163,13 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                 universities: this.state.selectedData.universities
             }
         });
+
+        let isSelectedAll = data.find(x => x.value == 'select_all');
+        if (isSelectedAll) {
+                data = this.state.filterData.years.filter(x => x.value != 'select_all');
+                console.log(data);
+            return;
+        }
     }
 
     onPeriodsFilterChange(data: Array<KeyValue>) {
@@ -138,6 +180,13 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                 universities: this.state.selectedData.universities
             }
         });
+
+        let isSelectedAll = data.find(x => x.value == 'select_all');
+        if (isSelectedAll) {
+                data = this.state.filterData.periods.filter(x => x.value != 'select_all');
+                console.log(data);
+            return;
+        }
     }
 
     onUniversitiesFilterChange(data: Array<KeyValue>) {
@@ -148,6 +197,13 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                 universities: data
             }
         });
+
+        let isSelectedAll = data.find(x => x.value == 'select_all');
+        if (isSelectedAll) {
+                data = this.state.filterData.universities.filter(x => x.value != 'select_all');
+                console.log(data);
+            return;
+        }
     }
 
     render() {

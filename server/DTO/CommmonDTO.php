@@ -59,4 +59,8 @@
 		public $CodigoDepartamento = null;
 		public $Nombre = null;
 	}
+
+	class Year{
+		public $Value = null;
+	}
 ?>
