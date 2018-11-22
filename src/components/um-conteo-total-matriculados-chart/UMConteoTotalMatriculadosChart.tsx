@@ -80,10 +80,10 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     return;
                 }
 
-                let years: Array<KeyValue> = res.data.ResultData.map((x: any, index: number) => {
+                let years: Array<KeyValue> = res.data.ResultData.map((x: any) => {
                     return {
                         label: x.Value,
-                        value: index
+                        value: x.Value
                     }
                 });
 
@@ -131,7 +131,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         };
 
         let ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
-        new Chart(ctx, {
+        let chartTest = new Chart(ctx, {
             type: 'bar',
             data: barChartData,
             options: {
@@ -150,6 +150,27 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     yAxes: [{
                         stacked: true
                     }]
+                },
+                hover: {
+                    animationDuration: 0
+                },
+                animation: {
+                    duration: 1,
+                    onComplete: function () {
+                        var chartInstance = this.chart,
+                            ctx = chartInstance.ctx;
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'top';
+            
+                        this.data.datasets.forEach(function (dataset: any, i:any) {
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar: any, index: any) {
+                                var data = dataset.data[index];                            
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        });
+                    }
                 }
             }
         });
@@ -166,8 +187,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         let isSelectedAll = data.find(x => x.value == 'select_all');
         if (isSelectedAll) {
-                data = this.state.filterData.years.filter(x => x.value != 'select_all');
-                console.log(data);
+            data = this.state.filterData.years.filter(x => x.value != 'select_all');
+            console.log(data);
             return;
         }
     }
@@ -183,8 +204,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         let isSelectedAll = data.find(x => x.value == 'select_all');
         if (isSelectedAll) {
-                data = this.state.filterData.periods.filter(x => x.value != 'select_all');
-                console.log(data);
+            data = this.state.filterData.periods.filter(x => x.value != 'select_all');
+            console.log(data);
             return;
         }
     }
@@ -200,8 +221,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         let isSelectedAll = data.find(x => x.value == 'select_all');
         if (isSelectedAll) {
-                data = this.state.filterData.universities.filter(x => x.value != 'select_all');
-                console.log(data);
+            data = this.state.filterData.universities.filter(x => x.value != 'select_all');
+            console.log(data);
             return;
         }
     }

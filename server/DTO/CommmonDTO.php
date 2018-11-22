@@ -63,4 +63,13 @@
 	class Year{
 		public $Value = null;
 	}
+
+	class PyramidChartDTO{
+		public $Inscritos = null;
+		public $Admitidos = null;
+		public $Matriculados = null;
+		public $PorcentajeInscritos = null;
+		public $PorcentajeAdmitidos = null;
+		public $PorcentajeMatriculados = null;
+	}
 ?>

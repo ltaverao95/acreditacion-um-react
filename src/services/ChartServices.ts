@@ -16,5 +16,7 @@ export class ChartServices{
         this._serverURL = this._configService.GetAttribute(UtilsConstants.ConfigAttributes.BackendURL);
     }
 
-    
+    public GetPyramidChartDataByYearPeriodUniversityCode(data: any){
+        return axios.post(this._serverURL + "api/GetPyramidChartDataByYearPeriodUniversityCode.php", data);
+    }
 }

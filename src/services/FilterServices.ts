@@ -17,8 +17,8 @@ export class FilterServices {
     constructor() {
         this._periodsList = [
             { value: 'select_all', label: 'Seleccionar Todo' },
-            { value: '1', label: '1' },
-            { value: '2', label: '2' }
+            { value: 1, label: 1 },
+            { value: 2, label: 2 }
         ];
 
         this._serverURL = this._configService.GetAttribute(UtilsConstants.ConfigAttributes.BackendURL);

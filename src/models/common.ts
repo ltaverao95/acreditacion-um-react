@@ -1,6 +1,6 @@
 class KeyValue {
-    public value: string;
-    public label: string;
+    public value: any;
+    public label: any;
 }
 
 interface ICommonProps {
