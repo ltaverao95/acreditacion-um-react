@@ -58,11 +58,10 @@ p{
     display: grid;
     grid-template-areas: ". button ."
                          ". canvas .";
-    grid-row-gap: 20px;
+    grid-row-gap: 10px;
 }
 .applyFilterButton{
     grid-area: button;
-    width: 35%;
     justify-self: center;
 }
 footer{
@@ -77,6 +76,12 @@ footer{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
+}
+.filter-item:nth-of-type(1){
+    justify-self: right;
+}
+.filter-item:nth-of-type(3){
+    justify-self: left;
 }
 .popover-header{
     font-size: 15px;

@@ -9,6 +9,7 @@ interface ICommonProps {
     selectedData?: Array<KeyValue>;
     indexKey?: number;
     onChange?: (data: Array<KeyValue>) => void;
+    onApplyFilter?: () => void;
 }
 
 interface IFilterState {

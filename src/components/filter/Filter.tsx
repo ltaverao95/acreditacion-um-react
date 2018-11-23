@@ -3,11 +3,11 @@ import Select from 'react-select';
 import {
     Glyphicon
 } from "react-bootstrap";
-import { 
-    Button, 
-    Popover, 
-    PopoverHeader, 
-    PopoverBody 
+import {
+    Button,
+    Popover,
+    PopoverHeader,
+    PopoverBody
 } from 'reactstrap';
 
 import {
@@ -26,6 +26,7 @@ export class FilterComponent extends React.Component<ICommonProps, Ownstate> {
 
         this.handleChange = this.handleChange.bind(this);
         this.onFilterClick = this.onFilterClick.bind(this);
+        this.onFilterApply = this.onFilterApply.bind(this);
 
         this.state = {
             popoverOpen: false
@@ -42,20 +43,33 @@ export class FilterComponent extends React.Component<ICommonProps, Ownstate> {
         });
     }
 
+    onFilterApply() {
+        this.setState({
+            popoverOpen: !this.state.popoverOpen
+        });
+
+        this.props.onApplyFilter();
+    }
+
     render() {
         return (
             <div>
-                <Button id={"Popover-" + this.props.indexKey} outline color="secondary" onClick={this.onFilterClick}>
-                    {this.props.label} &nbsp;
-                    <Glyphicon glyph="filter" />
-                </Button>
+                <button id={"Popover-" + this.props.indexKey} className="btn btn-default" onClick={this.onFilterClick}>
+                    <Glyphicon glyph="filter" /> &nbsp;
+                    {this.props.label}
+                </button>
 
-                <Popover placement="bottom" 
-                         isOpen={this.state.popoverOpen} 
-                         target={"Popover-" + this.props.indexKey} 
-                         toggle={this.onFilterClick}
-                         className="popoverStyle">
-                    <PopoverHeader className="popover-header">{this.props.label}</PopoverHeader>
+                <Popover placement="bottom"
+                    isOpen={this.state.popoverOpen}
+                    target={"Popover-" + this.props.indexKey}
+                    toggle={this.onFilterClick}
+                    className="popoverStyle">
+                    <PopoverHeader className="popover-header">
+                        <button className="btn btn-default" onClick={this.onFilterApply}>
+                            <Glyphicon glyph="ok" /> &nbsp;
+                            Aplicar Filtro
+                        </button>
+                    </PopoverHeader>
                     <PopoverBody>
                         <Select
                             defaultValue={this.props.selectedData}

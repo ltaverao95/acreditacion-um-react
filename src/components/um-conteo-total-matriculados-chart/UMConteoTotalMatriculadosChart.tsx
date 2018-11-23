@@ -1,9 +1,5 @@
 import * as React from "react";
 import { AxiosResponse } from 'axios';
-import { Button } from "reactstrap";
-import {
-    Glyphicon
-} from "react-bootstrap";
 import Loader from 'react-loader-advanced';
 
 import {
@@ -72,7 +68,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
         this.onPeriodsFilterChange = this.onPeriodsFilterChange.bind(this);
         this.onUniversitiesFilterChange = this.onUniversitiesFilterChange.bind(this);
-        this.applyFilters = this.applyFilters.bind(this);
+        this.onApplyFilters = this.onApplyFilters.bind(this);
     }
 
     componentDidMount() {
@@ -199,11 +195,13 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                 {
                     label: 'Pregrado',
                     backgroundColor: "rgb(255, 99, 132)",
+                    hoverBackgroundColor: "rgb(255, 99, 132)",
                     data: new Array<any>()
                 },
                 {
                     label: 'Posgrado',
                     backgroundColor: "rgb(54, 162, 235)",
+                    hoverBackgroundColor: "rgb(54, 162, 235)",
                     data: new Array<any>()
                 }
             ]
@@ -230,8 +228,9 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     text: 'Conteo total matriculados'
                 },
                 tooltips: {
-                    enabled: false
+                    enabled: true
                 },
+                events: ['click'],
                 responsive: true,
                 scales: {
                     xAxes: [{
@@ -406,7 +405,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         });
     }
 
-    applyFilters() {
+    onApplyFilters() {
 
         if (this.state.universitiesList.length == 0 &&
             this.state.yearsList.length == 0 &&
@@ -451,24 +450,17 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
             <Loader show={this.state.showLoadingDialog} message={'Cargando...'}>
                 <div className="filter-container">
                     <div className="filter-item">
-                        <FilterComponent label="Años" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 10 : 7} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                        <FilterComponent label="Años" selectedData={this.state.selectedData.years} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 10 : 7} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodos" selectedData={this.state.selectedData.periods} indexKey={this.props.indexKey == 2 ? 11 : 8} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Periodos" selectedData={this.state.selectedData.periods} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 11 : 8} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Universidades" selectedData={this.state.selectedData.universities} indexKey={this.props.indexKey == 2 ? 12 : 9} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
+                        <FilterComponent label="Universidades" selectedData={this.state.selectedData.universities} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 12 : 9} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
                     </div>
                 </div>
 
-                <br />
-
                 <div className="applyfilterContainer">
-                    <Button className="applyFilterButton" outline color="secondary" onClick={this.applyFilters}>
-                        Aplicar Filtros
-                        <Glyphicon glyph="filter" />
-                    </Button>
-
                     <canvas id={"stacked-chart-" + this.props.indexKey} className="chart"></canvas>
                 </div>
             </Loader>

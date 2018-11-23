@@ -6206,7 +6206,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".site {\r\n    display: flex;\r\n    min-height: 100vh;\r\n    flex-direction: column;\r\n}\r\nheader{\r\n    height: 145px;\r\n    margin-bottom: 40px;\r\n}\r\nheader .top,\r\nheader .main-nav{\r\n    display: block;\r\n}\r\nheader .top{\r\n    background-color: #a7ce47;\r\n    font-size: 15px;\r\n    height: 40px;\r\n}\r\nheader .top ul li{\r\n    display: inline-block;\r\n}\r\nheader .top ul li a{\r\n    border-left: solid 1px rgba(255,255,255,.15);\r\n    color: #666;\r\n    display: block;\r\n    position: relative;\r\n    padding: 9px 15px;\r\n}\r\nheader .main-nav{\r\n    background-color: #666666;\r\n    height: 105px;\r\n}\r\n.navbar{\r\n    padding: 0 !important;\r\n}\r\n.main-container{\r\n    display: grid;\r\n    flex: 1;\r\n    grid-template-columns: 1fr 30px 1fr;\r\n    grid-template-rows: repeat(3, auto);\r\n    grid-row-gap: 50px;\r\n}\r\n.column7{\r\n    grid-column: 1 / 4;\r\n    justify-self: center;\r\n}\r\np{\r\n    font-weight: bold;\r\n    text-align: center;\r\n}\r\n.chart{\r\n    border: 1px solid #e8e8e8;\r\n    height: 300px !important;\r\n    margin: 0 auto;\r\n    width: 500px !important;\r\n}\r\n.applyfilterContainer{\r\n    display: grid;\r\n    grid-template-areas: \". button .\"\r\n                         \". canvas .\";\r\n    grid-row-gap: 20px;\r\n}\r\n.applyFilterButton{\r\n    grid-area: button;\r\n    width: 35%;\r\n    justify-self: center;\r\n}\r\nfooter{\r\n    background-color: #22222a;\r\n    min-height: 100px;\r\n}\r\n.popoverStyle{\r\n    min-width: 200px;\r\n    min-height: 100px;\r\n}\r\n.filter-container{\r\n    display: grid;\r\n    grid-template-columns: repeat(3, 1fr);\r\n    justify-items: center;\r\n}\r\n.popover-header{\r\n    font-size: 15px;\r\n    text-align: center;\r\n    font-weight: bold;\r\n}\r\n.popover-body{\r\n    padding: 0.5em;\r\n}\r\ncanvas{\r\n    grid-area: canvas;\r\n}\r\n\r\n/*Media Queries*/\r\n@media screen and (max-width: 516px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    .column7{\r\n        justify-self: initial;\r\n    }\r\n    .chart{\r\n        width: 100% !important;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n        padding: 0;\r\n        margin: 0;\r\n        position: unset;\r\n    }\r\n    header .top ul li a{\r\n        border-left: none;\r\n        border-bottom: solid 1px rgba(255,255,255,.15);\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n}\r\n@media screen and (max-width: 768px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n    }\r\n    header .top ul li a{\r\n        border-left: 1px solid transparent;\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n}\r\n@media screen and (min-width: 768px) and (max-width: 1066px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n}", ""]);
+exports.push([module.i, ".site {\r\n    display: flex;\r\n    min-height: 100vh;\r\n    flex-direction: column;\r\n}\r\nheader{\r\n    height: 145px;\r\n    margin-bottom: 40px;\r\n}\r\nheader .top,\r\nheader .main-nav{\r\n    display: block;\r\n}\r\nheader .top{\r\n    background-color: #a7ce47;\r\n    font-size: 15px;\r\n    height: 40px;\r\n}\r\nheader .top ul li{\r\n    display: inline-block;\r\n}\r\nheader .top ul li a{\r\n    border-left: solid 1px rgba(255,255,255,.15);\r\n    color: #666;\r\n    display: block;\r\n    position: relative;\r\n    padding: 9px 15px;\r\n}\r\nheader .main-nav{\r\n    background-color: #666666;\r\n    height: 105px;\r\n}\r\n.navbar{\r\n    padding: 0 !important;\r\n}\r\n.main-container{\r\n    display: grid;\r\n    flex: 1;\r\n    grid-template-columns: 1fr 30px 1fr;\r\n    grid-template-rows: repeat(3, auto);\r\n    grid-row-gap: 50px;\r\n}\r\n.column7{\r\n    grid-column: 1 / 4;\r\n    justify-self: center;\r\n}\r\np{\r\n    font-weight: bold;\r\n    text-align: center;\r\n}\r\n.chart{\r\n    border: 1px solid #e8e8e8;\r\n    height: 300px !important;\r\n    margin: 0 auto;\r\n    width: 500px !important;\r\n}\r\n.applyfilterContainer{\r\n    display: grid;\r\n    grid-template-areas: \". button .\"\r\n                         \". canvas .\";\r\n    grid-row-gap: 10px;\r\n}\r\n.applyFilterButton{\r\n    grid-area: button;\r\n    justify-self: center;\r\n}\r\nfooter{\r\n    background-color: #22222a;\r\n    min-height: 100px;\r\n}\r\n.popoverStyle{\r\n    min-width: 200px;\r\n    min-height: 100px;\r\n}\r\n.filter-container{\r\n    display: grid;\r\n    grid-template-columns: repeat(3, 1fr);\r\n    justify-items: center;\r\n}\r\n.filter-item:nth-of-type(1){\r\n    justify-self: right;\r\n}\r\n.filter-item:nth-of-type(3){\r\n    justify-self: left;\r\n}\r\n.popover-header{\r\n    font-size: 15px;\r\n    text-align: center;\r\n    font-weight: bold;\r\n}\r\n.popover-body{\r\n    padding: 0.5em;\r\n}\r\ncanvas{\r\n    grid-area: canvas;\r\n}\r\n\r\n/*Media Queries*/\r\n@media screen and (max-width: 516px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    .column7{\r\n        justify-self: initial;\r\n    }\r\n    .chart{\r\n        width: 100% !important;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n        padding: 0;\r\n        margin: 0;\r\n        position: unset;\r\n    }\r\n    header .top ul li a{\r\n        border-left: none;\r\n        border-bottom: solid 1px rgba(255,255,255,.15);\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n}\r\n@media screen and (max-width: 768px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n    }\r\n    header .top ul li a{\r\n        border-left: 1px solid transparent;\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n}\r\n@media screen and (min-width: 768px) and (max-width: 1066px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n}", ""]);
 
 // exports
 
@@ -43534,6 +43534,7 @@ var FilterComponent = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.handleChange = _this.handleChange.bind(_this);
         _this.onFilterClick = _this.onFilterClick.bind(_this);
+        _this.onFilterApply = _this.onFilterApply.bind(_this);
         _this.state = {
             popoverOpen: false
         };
@@ -43547,14 +43548,23 @@ var FilterComponent = /** @class */ (function (_super) {
             popoverOpen: !this.state.popoverOpen
         });
     };
+    FilterComponent.prototype.onFilterApply = function () {
+        this.setState({
+            popoverOpen: !this.state.popoverOpen
+        });
+        this.props.onApplyFilter();
+    };
     FilterComponent.prototype.render = function () {
         return (React.createElement("div", null,
-            React.createElement(reactstrap_1.Button, { id: "Popover-" + this.props.indexKey, outline: true, color: "secondary", onClick: this.onFilterClick },
-                this.props.label,
+            React.createElement("button", { id: "Popover-" + this.props.indexKey, className: "btn btn-default", onClick: this.onFilterClick },
+                React.createElement(react_bootstrap_1.Glyphicon, { glyph: "filter" }),
                 " \u00A0",
-                React.createElement(react_bootstrap_1.Glyphicon, { glyph: "filter" })),
+                this.props.label),
             React.createElement(reactstrap_1.Popover, { placement: "bottom", isOpen: this.state.popoverOpen, target: "Popover-" + this.props.indexKey, toggle: this.onFilterClick, className: "popoverStyle" },
-                React.createElement(reactstrap_1.PopoverHeader, { className: "popover-header" }, this.props.label),
+                React.createElement(reactstrap_1.PopoverHeader, { className: "popover-header" },
+                    React.createElement("button", { className: "btn btn-default", onClick: this.onFilterApply },
+                        React.createElement(react_bootstrap_1.Glyphicon, { glyph: "ok" }),
+                        " \u00A0 Aplicar Filtro")),
                 React.createElement(reactstrap_1.PopoverBody, null,
                     React.createElement(react_select_1.default, { defaultValue: this.props.selectedData, onChange: this.handleChange, options: this.props.data, isMulti: true, closeMenuOnSelect: false })))));
     };
@@ -43668,8 +43678,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "react");
-var reactstrap_1 = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.es.js");
-var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/es/index.js");
 var react_loader_advanced_1 = __webpack_require__(/*! react-loader-advanced */ "./node_modules/react-loader-advanced/lib/react-loader-advanced.js");
 var FilterServices_1 = __webpack_require__(/*! ../../services/FilterServices */ "./src/services/FilterServices.ts");
 var ChartServices_1 = __webpack_require__(/*! ../../services/ChartServices */ "./src/services/ChartServices.ts");
@@ -43717,7 +43725,7 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
         _this.onYearsFilterChange = _this.onYearsFilterChange.bind(_this);
         _this.onPeriodsFilterChange = _this.onPeriodsFilterChange.bind(_this);
         _this.onUniversitiesFilterChange = _this.onUniversitiesFilterChange.bind(_this);
-        _this.applyFilters = _this.applyFilters.bind(_this);
+        _this.onApplyFilters = _this.onApplyFilters.bind(_this);
         return _this;
     }
     UMConteoTotalMatriculadosChart.prototype.componentDidMount = function () {
@@ -43819,11 +43827,13 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                 {
                     label: 'Pregrado',
                     backgroundColor: "rgb(255, 99, 132)",
+                    hoverBackgroundColor: "rgb(255, 99, 132)",
                     data: new Array()
                 },
                 {
                     label: 'Posgrado',
                     backgroundColor: "rgb(54, 162, 235)",
+                    hoverBackgroundColor: "rgb(54, 162, 235)",
                     data: new Array()
                 }
             ]
@@ -43849,8 +43859,9 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                     text: 'Conteo total matriculados'
                 },
                 tooltips: {
-                    enabled: false
+                    enabled: true
                 },
+                events: ['click'],
                 responsive: true,
                 scales: {
                     xAxes: [{
@@ -44003,7 +44014,7 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
             periodsList: periodsList
         });
     };
-    UMConteoTotalMatriculadosChart.prototype.applyFilters = function () {
+    UMConteoTotalMatriculadosChart.prototype.onApplyFilters = function () {
         var _this = this;
         if (this.state.universitiesList.length == 0 &&
             this.state.yearsList.length == 0 &&
@@ -44038,16 +44049,12 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
         return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' },
             React.createElement("div", { className: "filter-container" },
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1os", selectedData: this.state.selectedData.years, indexKey: this.props.indexKey == 2 ? 10 : 7, data: this.state.filterData.years, onChange: this.onYearsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1os", selectedData: this.state.selectedData.years, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 10 : 7, data: this.state.filterData.years, onChange: this.onYearsFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Periodos", selectedData: this.state.selectedData.periods, indexKey: this.props.indexKey == 2 ? 11 : 8, data: this.state.filterData.periods, onChange: this.onPeriodsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "Periodos", selectedData: this.state.selectedData.periods, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 11 : 8, data: this.state.filterData.periods, onChange: this.onPeriodsFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Universidades", selectedData: this.state.selectedData.universities, indexKey: this.props.indexKey == 2 ? 12 : 9, data: this.state.filterData.universities, onChange: this.onUniversitiesFilterChange }))),
-            React.createElement("br", null),
+                    React.createElement(Filter_1.FilterComponent, { label: "Universidades", selectedData: this.state.selectedData.universities, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 12 : 9, data: this.state.filterData.universities, onChange: this.onUniversitiesFilterChange }))),
             React.createElement("div", { className: "applyfilterContainer" },
-                React.createElement(reactstrap_1.Button, { className: "applyFilterButton", outline: true, color: "secondary", onClick: this.applyFilters },
-                    "Aplicar Filtros",
-                    React.createElement(react_bootstrap_1.Glyphicon, { glyph: "filter" })),
                 React.createElement("canvas", { id: "stacked-chart-" + this.props.indexKey, className: "chart" }))));
     };
     return UMConteoTotalMatriculadosChart;
@@ -44081,8 +44088,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "react");
-var reactstrap_1 = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.es.js");
-var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/es/index.js");
 var react_loader_advanced_1 = __webpack_require__(/*! react-loader-advanced */ "./node_modules/react-loader-advanced/lib/react-loader-advanced.js");
 var FilterServices_1 = __webpack_require__(/*! ../../services/FilterServices */ "./src/services/FilterServices.ts");
 var ChartServices_1 = __webpack_require__(/*! ../../services/ChartServices */ "./src/services/ChartServices.ts");
@@ -44130,7 +44135,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
         _this.onYearsFilterChange = _this.onYearsFilterChange.bind(_this);
         _this.onPeriodsFilterChange = _this.onPeriodsFilterChange.bind(_this);
         _this.onUniversitiesFilterChange = _this.onUniversitiesFilterChange.bind(_this);
-        _this.applyFilters = _this.applyFilters.bind(_this);
+        _this.onApplyFilters = _this.onApplyFilters.bind(_this);
         return _this;
     }
     UMMatriculadosPrimerCursoChart.prototype.renderChartAjax = function () {
@@ -44155,9 +44160,20 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 !res.data.ResultData) {
                 return;
             }
-            var data = res.data.ResultData;
-            data = [data.PorcentajeInscritos, data.PorcentajeAdmitidos, data.PorcentajeMatriculados];
-            _this.renderChart(data);
+            var objData = res.data.ResultData;
+            objData = {
+                data: [
+                    objData.PorcentajeInscritos,
+                    objData.PorcentajeAdmitidos,
+                    objData.PorcentajeMatriculados
+                ],
+                labels: [
+                    "Inscritos: " + objData.Inscritos,
+                    "Admitidos: " + objData.Admitidos,
+                    "Matriculados: " + objData.Matriculados
+                ]
+            };
+            _this.renderChart(objData);
         });
     };
     UMMatriculadosPrimerCursoChart.prototype.componentDidMount = function () {
@@ -44220,7 +44236,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
             type: 'funnel',
             data: {
                 datasets: [{
-                        data: data,
+                        data: data.data,
                         backgroundColor: [
                             "#FF6384",
                             "#36A2EB",
@@ -44232,11 +44248,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                             "#FFCE56"
                         ]
                     }],
-                labels: [
-                    "Inscritos",
-                    "Admitidos",
-                    "Matriculados"
-                ]
+                labels: data.labels.slice()
             },
             options: {
                 responsive: true,
@@ -44254,6 +44266,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 hover: {
                     animationDuration: 0
                 },
+                events: new Array(),
                 animation: {
                     duration: 1,
                     onComplete: function () {
@@ -44395,7 +44408,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
             periodsList: periodsList
         });
     };
-    UMMatriculadosPrimerCursoChart.prototype.applyFilters = function () {
+    UMMatriculadosPrimerCursoChart.prototype.onApplyFilters = function () {
         var _this = this;
         if (this.state.universitiesList.length == 0 &&
             this.state.yearsList.length == 0 &&
@@ -44422,25 +44435,32 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 !res.data.ResultData) {
                 return;
             }
-            var data = res.data.ResultData;
-            data = [data.PorcentajeInscritos, data.PorcentajeAdmitidos, data.PorcentajeMatriculados];
-            _this.renderChart(data);
+            var objData = res.data.ResultData;
+            objData = {
+                data: [
+                    objData.PorcentajeInscritos,
+                    objData.PorcentajeAdmitidos,
+                    objData.PorcentajeMatriculados
+                ],
+                labels: [
+                    "Inscritos: " + objData.Inscritos,
+                    "Admitidos: " + objData.Admitidos,
+                    "Matriculados: " + objData.Matriculados
+                ]
+            };
+            _this.renderChart(objData);
         });
     };
     UMMatriculadosPrimerCursoChart.prototype.render = function () {
         return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' },
             React.createElement("div", { className: "filter-container" },
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1os", selectedData: this.state.selectedData.years, indexKey: this.props.indexKey == 2 ? 4 : 1, data: this.state.filterData.years, onChange: this.onYearsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1os", selectedData: this.state.selectedData.years, indexKey: this.props.indexKey == 2 ? 4 : 1, data: this.state.filterData.years, onApplyFilter: this.onApplyFilters, onChange: this.onYearsFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Periodos", selectedData: this.state.selectedData.periods, indexKey: this.props.indexKey == 2 ? 5 : 2, data: this.state.filterData.periods, onChange: this.onPeriodsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "Periodos", selectedData: this.state.selectedData.periods, indexKey: this.props.indexKey == 2 ? 5 : 2, data: this.state.filterData.periods, onApplyFilter: this.onApplyFilters, onChange: this.onPeriodsFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Universidades", selectedData: this.state.selectedData.universities, indexKey: this.props.indexKey == 2 ? 6 : 3, data: this.state.filterData.universities, onChange: this.onUniversitiesFilterChange }))),
-            React.createElement("br", null),
+                    React.createElement(Filter_1.FilterComponent, { label: "Universidades", selectedData: this.state.selectedData.universities, indexKey: this.props.indexKey == 2 ? 6 : 3, data: this.state.filterData.universities, onApplyFilter: this.onApplyFilters, onChange: this.onUniversitiesFilterChange }))),
             React.createElement("div", { className: "applyfilterContainer" },
-                React.createElement(reactstrap_1.Button, { className: "applyFilterButton", outline: true, color: "secondary", onClick: this.applyFilters },
-                    "Aplicar Filtros",
-                    React.createElement(react_bootstrap_1.Glyphicon, { glyph: "filter" })),
                 React.createElement("canvas", { id: "cone-chart-" + this.props.indexKey, className: "chart" }))));
     };
     return UMMatriculadosPrimerCursoChart;

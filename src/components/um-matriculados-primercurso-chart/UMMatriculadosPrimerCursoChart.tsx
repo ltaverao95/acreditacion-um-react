@@ -1,9 +1,5 @@
 import * as React from "react";
 import { AxiosResponse } from 'axios';
-import { Button } from "reactstrap";
-import {
-    Glyphicon
-} from "react-bootstrap";
 import Loader from 'react-loader-advanced';
 
 import {
@@ -72,7 +68,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
         this.onPeriodsFilterChange = this.onPeriodsFilterChange.bind(this);
         this.onUniversitiesFilterChange = this.onUniversitiesFilterChange.bind(this);
-        this.applyFilters = this.applyFilters.bind(this);
+        this.onApplyFilters = this.onApplyFilters.bind(this);
     }
 
     renderChartAjax() {
@@ -104,11 +100,21 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     return;
                 }
 
-                let data = res.data.ResultData;
+                let objData = res.data.ResultData;
+                objData = {
+                    data: [
+                        objData.PorcentajeInscritos, 
+                        objData.PorcentajeAdmitidos, 
+                        objData.PorcentajeMatriculados
+                    ],
+                    labels: [
+                        "Inscritos: " + objData.Inscritos, 
+                        "Admitidos: " + objData.Admitidos, 
+                        "Matriculados: " + objData.Matriculados
+                    ]
+                };
 
-                data = [data.PorcentajeInscritos, data.PorcentajeAdmitidos, data.PorcentajeMatriculados];
-
-                this.renderChart(data);
+                this.renderChart(objData);
             }
         );
     }
@@ -189,7 +195,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
             type: 'funnel',
             data: {
                 datasets: [{
-                    data: data,
+                    data: data.data,
                     backgroundColor: [
                         "#FF6384",
                         "#36A2EB",
@@ -202,9 +208,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     ]
                 }],
                 labels: [
-                    "Inscritos",
-                    "Admitidos",
-                    "Matriculados"
+                    ...data.labels
                 ]
             },
             options: {
@@ -223,6 +227,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 hover: {
                     animationDuration: 0
                 },
+                events: new Array<any>(),
                 animation: {
                     duration: 1,
                     onComplete: function () {
@@ -387,7 +392,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         });
     }
 
-    applyFilters() {
+    onApplyFilters() {
 
         if (this.state.universitiesList.length == 0 &&
             this.state.yearsList.length == 0 &&
@@ -421,11 +426,21 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     return;
                 }
 
-                let data = res.data.ResultData;
+                let objData = res.data.ResultData;
+                objData = {
+                    data: [
+                        objData.PorcentajeInscritos, 
+                        objData.PorcentajeAdmitidos, 
+                        objData.PorcentajeMatriculados
+                    ],
+                    labels: [
+                        "Inscritos: " + objData.Inscritos, 
+                        "Admitidos: " + objData.Admitidos, 
+                        "Matriculados: " + objData.Matriculados
+                    ]
+                };
 
-                data = [data.PorcentajeInscritos, data.PorcentajeAdmitidos, data.PorcentajeMatriculados];
-
-                this.renderChart(data);
+                this.renderChart(objData);
             }
         );
     }
@@ -435,24 +450,17 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
             <Loader show={this.state.showLoadingDialog} message={'Cargando...'}>
                 <div className="filter-container">
                     <div className="filter-item">
-                        <FilterComponent label="Años" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 4 : 1} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                        <FilterComponent label="Años" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 4 : 1} data={this.state.filterData.years} onApplyFilter={this.onApplyFilters} onChange={this.onYearsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodos" selectedData={this.state.selectedData.periods} indexKey={this.props.indexKey == 2 ? 5 : 2} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Periodos" selectedData={this.state.selectedData.periods} indexKey={this.props.indexKey == 2 ? 5 : 2} data={this.state.filterData.periods} onApplyFilter={this.onApplyFilters} onChange={this.onPeriodsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Universidades" selectedData={this.state.selectedData.universities} indexKey={this.props.indexKey == 2 ? 6 : 3} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
+                        <FilterComponent label="Universidades" selectedData={this.state.selectedData.universities} indexKey={this.props.indexKey == 2 ? 6 : 3} data={this.state.filterData.universities} onApplyFilter={this.onApplyFilters} onChange={this.onUniversitiesFilterChange} />
                     </div>
                 </div>
 
-                <br />
-
                 <div className="applyfilterContainer">
-                    <Button className="applyFilterButton" outline color="secondary" onClick={this.applyFilters}>
-                        Aplicar Filtros
-                        <Glyphicon glyph="filter" />
-                    </Button>
-
                     <canvas id={"cone-chart-" + this.props.indexKey} className="chart"></canvas>
                 </div>
             </Loader>
