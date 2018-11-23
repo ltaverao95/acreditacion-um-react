@@ -15,6 +15,8 @@ import { FilterServices } from '../../services/FilterServices';
 import { ChartServices } from '../../services/ChartServices';
 import { FilterComponent } from '../filter/Filter';
 
+require('chart.js/dist/Chart.min.js');
+require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
 declare let Chart: any;
 
 let filterService = new FilterServices();

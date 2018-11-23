@@ -1,5 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import './assets/css/styles.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './assets/images/logo.png';
+import './assets/images/logo-con-acreditación.png';
 
 import { HomeComponent } from './components/home/Home';
 

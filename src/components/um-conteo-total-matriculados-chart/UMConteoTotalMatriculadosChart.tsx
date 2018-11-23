@@ -15,6 +15,8 @@ import { FilterServices } from '../../services/FilterServices';
 import { ChartServices } from '../../services/ChartServices';
 import { FilterComponent } from '../filter/Filter';
 
+require('chart.js/dist/Chart.min.js');
+require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
 declare let Chart: any;
 
 let filterService: FilterServices = new FilterServices();
@@ -179,7 +181,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         let yearsFiltered = new Array<any>();
         for (let i = 0; i < years.length; i++) {
             let currentYear: any = yearsFiltered.find(x => x == years[i]);
-            if(currentYear){
+            if (currentYear) {
                 continue;
             }
 
@@ -210,7 +212,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
             let pregradoData: Array<any> = dataByYear.filter(x => x.Codigo == 1).map(x => parseFloat(x.PctDato));
             let posgradoData: Array<any> = dataByYear.filter(x => x.Codigo == 2).map(x => parseFloat(x.PctDato));
-                
+
             barChartData.datasets[0].data.push(...pregradoData);
             barChartData.datasets[1].data.push(...posgradoData);
         }
