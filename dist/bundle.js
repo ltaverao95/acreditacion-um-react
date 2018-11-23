@@ -43708,6 +43708,9 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                     }
                 ]
             },
+            universitiesList: [],
+            periodsList: [],
+            yearsList: [],
             promisesCount: 0,
             showLoadingDialog: true
         };
@@ -43846,7 +43849,7 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                     text: 'Conteo total matriculados'
                 },
                 tooltips: {
-                    enabled: true
+                    enabled: false
                 },
                 responsive: true,
                 scales: {
@@ -43871,7 +43874,8 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                             var meta = chartInstance.controller.getDatasetMeta(i);
                             meta.data.forEach(function (bar, index) {
                                 var data = dataset.data[index];
-                                ctx.fillText(data + "%", bar._model.x, bar._model.y - 5);
+                                ctx.fillStyle = "black";
+                                ctx.fillText(data + "%", bar._model.x, bar._model.y);
                             });
                         });
                     }
@@ -44001,6 +44005,15 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
     };
     UMConteoTotalMatriculadosChart.prototype.applyFilters = function () {
         var _this = this;
+        if (this.state.universitiesList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+            this.setState({
+                universitiesList: this.state.filterData.universities.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
+                periodsList: this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
+                yearsList: this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; })
+            });
+        }
         this.setState({
             showLoadingDialog: true
         });
@@ -44108,6 +44121,9 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                     }
                 ]
             },
+            universitiesList: [],
+            periodsList: [],
+            yearsList: [],
             promisesCount: 0,
             showLoadingDialog: true
         };
@@ -44199,6 +44215,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
     };
     UMMatriculadosPrimerCursoChart.prototype.renderChart = function (data) {
         var ctx = document.getElementById("cone-chart-" + this.props.indexKey);
+        Chart.defaults.global.defaultFontSize = 16;
         var config = {
             type: 'funnel',
             data: {
@@ -44231,7 +44248,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                     text: 'Matriculados 1er curso'
                 },
                 tooltips: {
-                    enabled: true
+                    enabled: false
                 },
                 sort: 'desc',
                 hover: {
@@ -44248,7 +44265,8 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                             var meta = chartInstance.controller.getDatasetMeta(i);
                             meta.data.forEach(function (bar, index) {
                                 var data = dataset.data[index];
-                                ctx.fillText(data + "%", bar._model.x, bar._model.y - 5);
+                                ctx.fillStyle = "black";
+                                ctx.fillText(data + "%", bar._model.x, bar._model.y + 30);
                             });
                         });
                     }
@@ -44379,14 +44397,23 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
     };
     UMMatriculadosPrimerCursoChart.prototype.applyFilters = function () {
         var _this = this;
+        if (this.state.universitiesList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+            this.setState({
+                universitiesList: this.state.filterData.universities.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
+                periodsList: this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
+                yearsList: this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; })
+            });
+        }
+        this.setState({
+            showLoadingDialog: true
+        });
         var dataRequest = {
             universities: this.state.universitiesList,
             years: this.state.yearsList,
             periods: this.state.periodsList
         };
-        this.setState({
-            showLoadingDialog: true
-        });
         chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(function (res) {
             _this.setState({
                 showLoadingDialog: false

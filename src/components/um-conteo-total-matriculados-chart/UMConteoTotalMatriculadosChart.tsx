@@ -62,6 +62,9 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     }
                 ]
             },
+            universitiesList: [],
+            periodsList: [],
+            yearsList: [],
             promisesCount: 0,
             showLoadingDialog: true
         };
@@ -227,7 +230,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     text: 'Conteo total matriculados'
                 },
                 tooltips: {
-                    enabled: true
+                    enabled: false
                 },
                 responsive: true,
                 scales: {
@@ -254,7 +257,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                             var meta = chartInstance.controller.getDatasetMeta(i);
                             meta.data.forEach(function (bar: any, index: any) {
                                 var data = dataset.data[index];
-                                ctx.fillText(data + "%", bar._model.x, bar._model.y - 5);
+                                ctx.fillStyle = "black";
+                                ctx.fillText(data + "%", bar._model.x, bar._model.y);
                             });
                         });
                     }
@@ -403,6 +407,16 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
     }
 
     applyFilters() {
+
+        if (this.state.universitiesList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+            this.setState({
+                universitiesList: this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value),
+                periodsList: this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value),
+                yearsList: this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value)
+            });
+        }
 
         this.setState({
             showLoadingDialog: true
