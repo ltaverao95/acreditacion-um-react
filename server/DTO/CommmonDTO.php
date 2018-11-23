@@ -72,4 +72,12 @@
 		public $PorcentajeAdmitidos = null;
 		public $PorcentajeMatriculados = null;
 	}
+
+	class StackedChartDTO{
+		public $Anio = null;
+		public $Codigo = null;
+		public $Nombre = null;
+		public $Dato = null;
+		public $PctDato = null;
+	}
 ?>

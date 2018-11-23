@@ -1,11 +1,14 @@
 import * as React from "react";
 import { AxiosResponse } from 'axios';
+import { Button } from "reactstrap";
+import {
+    Glyphicon
+} from "react-bootstrap";
 
 import {
     KeyValue,
     IUMChartProps,
-    IUMChartState,
-    IFilterState
+    IUMChartState
 } from "../../models";
 import { FilterServices } from '../../services/FilterServices';
 import { ChartServices } from '../../services/ChartServices';
@@ -16,8 +19,11 @@ declare let Chart: any;
 let filterService = new FilterServices();
 let chartServices = new ChartServices();
 
-interface OwnState{
+interface OwnState {
     promisesCount?: number;
+    universitiesList?: Array<KeyValue>;
+    yearsList?: Array<KeyValue>;
+    periodsList?: Array<KeyValue>;
 }
 
 export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProps, IUMChartState & OwnState> {
@@ -33,9 +39,24 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 universities: []
             },
             selectedData: {
-                years: [],
-                periods: [],
-                universities: []
+                years: [
+                    {
+                        label: 'Seleccionar Todo',
+                        value: 'select_all'
+                    }
+                ],
+                periods: [
+                    {
+                        label: 'Seleccionar Todo',
+                        value: 'select_all'
+                    }
+                ],
+                universities: [
+                    {
+                        label: 'Seleccionar Todo',
+                        value: 'select_all'
+                    }
+                ]
             },
             promisesCount: 0
         };
@@ -43,11 +64,12 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
         this.onPeriodsFilterChange = this.onPeriodsFilterChange.bind(this);
         this.onUniversitiesFilterChange = this.onUniversitiesFilterChange.bind(this);
+        this.applyFilters = this.applyFilters.bind(this);
     }
 
-    renderChartAjax(){
+    renderChartAjax() {
 
-        if(this.state.promisesCount < 2){
+        if (this.state.promisesCount < 2) {
             return;
         }
 
@@ -63,14 +85,22 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
         chartServices.GetPyramidChartDataByYearPeriodUniversityCode(data).then(
             (res: AxiosResponse) => {
-                console.log(res.data);
+
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                let data = res.data.ResultData;
+
+                data = [data.PorcentajeInscritos, data.PorcentajeAdmitidos, data.PorcentajeMatriculados];
+
+                this.renderChart(data);
             }
         );
     }
 
     componentDidMount() {
-
-        this.renderChart();
 
         filterService.getFilterUniversities().then(
             (res: AxiosResponse) => {
@@ -129,7 +159,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     filterData: {
                         universities: this.state.filterData.universities,
                         periods: this.state.filterData.periods,
-                        years: years
+                        years: years.sort((a, b) => a.label - b.label)
                     },
                     promisesCount: (this.state.promisesCount + 1)
                 });
@@ -139,13 +169,13 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         );
     }
 
-    renderChart() {
+    renderChart(data: any) {
         let ctx = document.getElementById("cone-chart-" + this.props.indexKey);
         let config = {
             type: 'funnel',
             data: {
                 datasets: [{
-                    data: [30, 60, 90],
+                    data: data,
                     backgroundColor: [
                         "#FF6384",
                         "#36A2EB",
@@ -158,9 +188,9 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     ]
                 }],
                 labels: [
-                    "Red",
-                    "Blue",
-                    "Yellow"
+                    "Inscritos",
+                    "Admitidos",
+                    "Matriculados"
                 ]
             },
             options: {
@@ -187,12 +217,12 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                         ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'top';
-            
-                        this.data.datasets.forEach(function (dataset: any, i:any) {
+
+                        this.data.datasets.forEach(function (dataset: any, i: any) {
                             var meta = chartInstance.controller.getDatasetMeta(i);
                             meta.data.forEach(function (bar: any, index: any) {
-                                var data = dataset.data[index];                            
-                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                var data = dataset.data[index];
+                                ctx.fillText(data + "%", bar._model.x, bar._model.y - 5);
                             });
                         });
                     }
@@ -203,55 +233,167 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         new Chart(ctx, config);
     }
 
-    onYearsFilterChange(data: Array<KeyValue>) {
+    onYearsFilterChange(yearsData: Array<KeyValue>) {
+
         this.setState({
             selectedData: {
-                years: data,
+                years: yearsData,
                 periods: this.state.selectedData.periods,
                 universities: this.state.selectedData.universities
             }
         });
 
-        let isSelectedAll = data.find(x => x.value == 'select_all');
-        if (isSelectedAll) {
-                data = this.state.filterData.years.filter(x => x.value != 'select_all');
-                console.log(data);
-            return;
+        let isSelectedAllYears = yearsData.find(x => x.value == 'select_all');
+        let isSelectedAllUniversities = this.state.selectedData.universities.find(x => x.value == 'select_all');
+        let isSelectedAllPeriods = this.state.selectedData.periods.find(x => x.value == 'select_all');
+        let universitiesList = [];
+        let periodsList = [];
+
+        if (isSelectedAllUniversities ||
+            this.state.selectedData.universities.length == 0) {
+            universitiesList = this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value);
         }
+        else {
+            universitiesList = this.state.selectedData.universities.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllPeriods ||
+            this.state.selectedData.periods.length == 0) {
+            periodsList = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            periodsList = this.state.selectedData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllYears ||
+            yearsData.length == 0) {
+            yearsData = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            yearsData = yearsData.map(x => x.value);
+        }
+
+        this.setState({
+            universitiesList,
+            periodsList,
+            yearsList: yearsData
+        });
     }
 
-    onPeriodsFilterChange(data: Array<KeyValue>) {
+    onPeriodsFilterChange(periodsData: Array<KeyValue>) {
         this.setState({
             selectedData: {
                 years: this.state.selectedData.years,
-                periods: data,
+                periods: periodsData,
                 universities: this.state.selectedData.universities
             }
         });
 
-        let isSelectedAll = data.find(x => x.value == 'select_all');
-        if (isSelectedAll) {
-                data = this.state.filterData.periods.filter(x => x.value != 'select_all');
-                console.log(data);
-            return;
+        let isSelectedAllYears = this.state.selectedData.years.find(x => x.value == 'select_all');
+        let isSelectedAllUniversities = this.state.selectedData.universities.find(x => x.value == 'select_all');
+        let isSelectedAllPeriods = periodsData.find(x => x.value == 'select_all');
+        let universitiesList = [];
+        let yearsList = [];
+
+        if (isSelectedAllUniversities ||
+            this.state.selectedData.universities.length == 0) {
+            universitiesList = this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value);
         }
+        else {
+            universitiesList = this.state.selectedData.universities.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllYears ||
+            this.state.selectedData.years.length == 0) {
+            yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            yearsList = this.state.selectedData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllPeriods ||
+            periodsData.length == 0) {
+            periodsData = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            periodsData = periodsData.map(x => x.value);
+        }
+
+        this.setState({
+            universitiesList,
+            yearsList,
+            periodsList: periodsData
+        });
     }
 
-    onUniversitiesFilterChange(data: Array<KeyValue>) {
+    onUniversitiesFilterChange(universitiesData: Array<KeyValue>) {
         this.setState({
             selectedData: {
                 years: this.state.selectedData.years,
                 periods: this.state.selectedData.periods,
-                universities: data
+                universities: universitiesData
             }
         });
 
-        let isSelectedAll = data.find(x => x.value == 'select_all');
-        if (isSelectedAll) {
-                data = this.state.filterData.universities.filter(x => x.value != 'select_all');
-                console.log(data);
-            return;
+        let isSelectedAllYears = this.state.selectedData.years.find(x => x.value == 'select_all');
+        let isSelectedAllUniversities = universitiesData.find(x => x.value == 'select_all');
+        let isSelectedAllPeriods = this.state.selectedData.periods.find(x => x.value == 'select_all');
+        let periodsList = [];
+        let yearsList = [];
+
+        if (isSelectedAllUniversities ||
+            universitiesData.length == 0) {
+            universitiesData = this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value);
         }
+        else {
+            universitiesData = universitiesData.map(x => x.value);
+        }
+
+        if (isSelectedAllYears ||
+            this.state.selectedData.years.length == 0) {
+            yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            yearsList = this.state.selectedData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllPeriods ||
+            this.state.selectedData.periods.length == 0) {
+            periodsList = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            periodsList = this.state.selectedData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        this.setState({
+            universitiesList: universitiesData,
+            yearsList,
+            periodsList
+        });
+    }
+
+    applyFilters() {
+
+        let dataRequest: any = {
+            universities: this.state.universitiesList,
+            years: this.state.yearsList,
+            periods: this.state.periodsList
+        }
+
+        chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(
+            (res: AxiosResponse) => {
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                let data = res.data.ResultData;
+
+                data = [data.PorcentajeInscritos, data.PorcentajeAdmitidos, data.PorcentajeMatriculados];
+
+                this.renderChart(data);
+            }
+        );
     }
 
     render() {
@@ -271,7 +413,14 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
                 <br />
 
-                <canvas id={"cone-chart-" + this.props.indexKey} className="chart"></canvas>
+                <div className="applyfilterContainer">
+                    <Button className="applyFilterButton" outline color="secondary" onClick={this.applyFilters}>
+                        Aplicar Filtros
+                        <Glyphicon glyph="filter" />
+                    </Button>
+
+                    <canvas id={"cone-chart-" + this.props.indexKey} className="chart"></canvas>
+                </div>
             </div>
         );
     }

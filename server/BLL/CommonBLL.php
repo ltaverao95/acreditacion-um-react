@@ -69,6 +69,23 @@
             return $responseDTO;
         }
 
+        public function GetStackedChartDataByYearPeriodUniversityCode($data)
+        {
+            $responseDTO = new ResponseDTO();
+	
+            try 
+            {
+                $commonDAL = new CommonDAL();
+                $responseDTO = $commonDAL->GetStackedChartDataByYearPeriodUniversityCode($data);
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+            
+            return $responseDTO;
+        }
+
         public function GetProgramas()
         {
             $responseDTO = new ResponseDTO();

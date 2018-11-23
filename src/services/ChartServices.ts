@@ -19,4 +19,8 @@ export class ChartServices{
     public GetPyramidChartDataByYearPeriodUniversityCode(data: any){
         return axios.post(this._serverURL + "api/GetPyramidChartDataByYearPeriodUniversityCode.php", data);
     }
+
+    public GetStackedChartDataByYearPeriodUniversityCode(data: any){
+        return axios.post(this._serverURL + "api/GetStackedChartDataByYearPeriodUniversityCode.php", data);
+    }
 }

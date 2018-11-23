@@ -54,6 +54,17 @@ p{
     margin: 0 auto;
     width: 500px !important;
 }
+.applyfilterContainer{
+    display: grid;
+    grid-template-areas: ". button ."
+                         ". canvas .";
+    grid-row-gap: 20px;
+}
+.applyFilterButton{
+    grid-area: button;
+    width: 35%;
+    justify-self: center;
+}
 footer{
     background-color: #22222a;
     min-height: 100px;
@@ -74,6 +85,9 @@ footer{
 }
 .popover-body{
     padding: 0.5em;
+}
+canvas{
+    grid-area: canvas;
 }
 
 /*Media Queries*/
