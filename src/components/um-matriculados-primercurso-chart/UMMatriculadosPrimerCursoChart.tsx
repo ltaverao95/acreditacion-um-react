@@ -4,6 +4,7 @@ import { Button } from "reactstrap";
 import {
     Glyphicon
 } from "react-bootstrap";
+import Loader from 'react-loader-advanced';
 
 import {
     KeyValue,
@@ -21,6 +22,7 @@ let chartServices = new ChartServices();
 
 interface OwnState {
     promisesCount?: number;
+    showLoadingDialog?: boolean;
     universitiesList?: Array<KeyValue>;
     yearsList?: Array<KeyValue>;
     periodsList?: Array<KeyValue>;
@@ -58,7 +60,8 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     }
                 ]
             },
-            promisesCount: 0
+            promisesCount: 0,
+            showLoadingDialog: true
         };
 
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
@@ -74,7 +77,8 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         }
 
         this.setState({
-            promisesCount: 0
+            promisesCount: 0,
+            showLoadingDialog: true
         });
 
         let data: any = {
@@ -85,6 +89,10 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
         chartServices.GetPyramidChartDataByYearPeriodUniversityCode(data).then(
             (res: AxiosResponse) => {
+
+                this.setState({
+                    showLoadingDialog: false
+                });
 
                 if (!res.data ||
                     !res.data.ResultData) {
@@ -380,8 +388,17 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
             periods: this.state.periodsList
         }
 
+        this.setState({
+            showLoadingDialog: true
+        });
+
         chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(
             (res: AxiosResponse) => {
+
+                this.setState({
+                    showLoadingDialog: false
+                });
+
                 if (!res.data ||
                     !res.data.ResultData) {
                     return;
@@ -398,7 +415,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
     render() {
         return (
-            <div>
+            <Loader show={this.state.showLoadingDialog} message={'Cargando...'}>
                 <div className="filter-container">
                     <div className="filter-item">
                         <FilterComponent label="Años" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 4 : 1} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
@@ -421,7 +438,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
                     <canvas id={"cone-chart-" + this.props.indexKey} className="chart"></canvas>
                 </div>
-            </div>
+            </Loader>
         );
     }
 

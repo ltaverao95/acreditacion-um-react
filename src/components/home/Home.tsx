@@ -45,7 +45,7 @@ export class HomeComponent extends React.Component<any, undefined> {
                             <div className="container">
                                 <div className="navbar-header">
                                     <a className="logo" href="http://umanizales.edu.co" title="Programas de Pregrado - Universidad de Manizales">
-                                        <img src="./src/assets/images/logo-con-acreditación.png" alt="Programas de Pregrado - Universidad de Manizales" />
+                                        <img src="./dist/assets/images/logo-con-acreditación.png" alt="Programas de Pregrado - Universidad de Manizales" />
                                     </a>
                                 </div>
                             </div>

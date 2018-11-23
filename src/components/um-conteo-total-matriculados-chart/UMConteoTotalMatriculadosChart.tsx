@@ -4,6 +4,7 @@ import { Button } from "reactstrap";
 import {
     Glyphicon
 } from "react-bootstrap";
+import Loader from 'react-loader-advanced';
 
 import {
     KeyValue,
@@ -21,6 +22,7 @@ let chartServices = new ChartServices();
 
 interface OwnState {
     promisesCount?: number;
+    showLoadingDialog?: boolean;
     universitiesList?: Array<KeyValue>;
     yearsList?: Array<KeyValue>;
     periodsList?: Array<KeyValue>;
@@ -58,7 +60,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     }
                 ]
             },
-            promisesCount: 0
+            promisesCount: 0,
+            showLoadingDialog: true
         };
 
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
@@ -142,7 +145,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         }
 
         this.setState({
-            promisesCount: 0
+            promisesCount: 0,
+            showLoadingDialog: true
         });
 
         let data: any = {
@@ -153,7 +157,9 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         chartServices.GetStackedChartDataByYearPeriodUniversityCode(data).then(
             (res: AxiosResponse) => {
-                console.log(res.data);
+                this.setState({
+                    showLoadingDialog: false
+                });
 
                 if (!res.data ||
                     !res.data.ResultData) {
@@ -396,6 +402,10 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
     applyFilters() {
 
+        this.setState({
+            showLoadingDialog: true
+        });
+
         let dataRequest: any = {
             universities: this.state.universitiesList,
             years: this.state.yearsList,
@@ -404,7 +414,9 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         chartServices.GetStackedChartDataByYearPeriodUniversityCode(dataRequest).then(
             (res: AxiosResponse) => {
-                console.log(res.data);
+                this.setState({
+                    showLoadingDialog: false
+                });
 
                 if (!res.data ||
                     !res.data.ResultData) {
@@ -420,7 +432,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
     render() {
         return (
-            <div>
+            <Loader show={this.state.showLoadingDialog} message={'Cargando...'}>
                 <div className="filter-container">
                     <div className="filter-item">
                         <FilterComponent label="Años" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 10 : 7} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
@@ -443,7 +455,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
                     <canvas id={"stacked-chart-" + this.props.indexKey} className="chart"></canvas>
                 </div>
-            </div>
+            </Loader>
         );
     }
 
