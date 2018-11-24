@@ -11,14 +11,31 @@ import { FilterServices } from '../../services/FilterServices';
 import { ChartServices } from '../../services/ChartServices';
 import { FilterComponent } from '../filter/Filter';
 
-require('chart.js/dist/Chart.min.js');
-require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
-declare let Chart: any;
-
 let filterService: FilterServices = new FilterServices();
 let chartServices = new ChartServices();
 
+declare let Chart: any;
+
+let barChartData = {
+    labels: new Array<any>(),
+    datasets: [
+        {
+            label: 'Pregrado',
+            backgroundColor: "#A8CF45",
+            hoverBackgroundColor: "#A8CF45",
+            data: new Array<any>()
+        },
+        {
+            label: 'Posgrado',
+            backgroundColor: "rgb(54, 162, 235)",
+            hoverBackgroundColor: "rgb(54, 162, 235)",
+            data: new Array<any>()
+        }
+    ]
+};
+
 interface OwnState {
+    chart?: any;
     promisesCount?: number;
     showLoadingDialog?: boolean;
     universitiesList?: Array<KeyValue>;
@@ -72,6 +89,57 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
     }
 
     componentDidMount() {
+
+        let ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
+        this.setState({
+            chart: new Chart(ctx, {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    title: {
+                        display: false,
+                        text: 'Conteo total matriculados'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        enabled: false
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    },
+                    hover: {
+                        animationDuration: 0
+                    },
+                    animation: {
+                        duration: 1,
+                        onComplete: function () {
+                            var chartInstance = this.chart,
+                                ctx = chartInstance.ctx;
+                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = "#fff";
+
+                            this.data.datasets.forEach(function (dataset: any, i: number) {
+                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                meta.data.forEach(function (bar: any, index: number) {
+                                    var data = dataset.data[index];
+                                    ctx.fillText(data + "%", bar._model.x, bar._model.y + 4);
+                                });
+                            });
+                        }
+                    }
+                }
+            })
+        });
 
         filterService.getFilterUniversities().then(
             (res: AxiosResponse) => {
@@ -178,6 +246,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         let years = data.map(x => x.Anio);
         let yearsFiltered = new Array<any>();
+
         for (let i = 0; i < years.length; i++) {
             let currentYear: any = yearsFiltered.find(x => x == years[i]);
             if (currentYear) {
@@ -189,81 +258,39 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         yearsFiltered = yearsFiltered.sort();
 
-        let barChartData = {
-            labels: [...yearsFiltered],
-            datasets: [
-                {
-                    label: 'Pregrado',
-                    backgroundColor: "rgb(255, 99, 132)",
-                    hoverBackgroundColor: "rgb(255, 99, 132)",
-                    data: new Array<any>()
-                },
-                {
-                    label: 'Posgrado',
-                    backgroundColor: "rgb(54, 162, 235)",
-                    hoverBackgroundColor: "rgb(54, 162, 235)",
-                    data: new Array<any>()
-                }
-            ]
-        };
+        let sumPregrado: number = 0;
+        let sumPosgrado: number = 0;
+
+        barChartData.labels = [...yearsFiltered];
 
         for (let i = 0; i < yearsFiltered.length; i++) {
 
-            let dataByYear = data.filter(x => x.Anio == yearsFiltered[i]);
+            let dataByYear: Array<any> = data.filter(x => x.Anio == yearsFiltered[i]);
 
             let pregradoData: Array<any> = dataByYear.filter(x => x.Codigo == 1).map(x => parseFloat(x.PctDato));
             let posgradoData: Array<any> = dataByYear.filter(x => x.Codigo == 2).map(x => parseFloat(x.PctDato));
+
+            dataByYear.map(x => {
+
+                if (x.Codigo == 1) {
+                    sumPregrado += parseInt(x.Dato);
+                }
+                else {
+                    sumPosgrado += parseInt(x.Dato);
+                }
+            });
 
             barChartData.datasets[0].data.push(...pregradoData);
             barChartData.datasets[1].data.push(...posgradoData);
         }
 
-        let ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
-        new Chart(ctx, {
-            type: 'bar',
-            data: barChartData,
-            options: {
-                title: {
-                    display: true,
-                    text: 'Conteo total matriculados'
-                },
-                tooltips: {
-                    enabled: true
-                },
-                events: ['click'],
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                    }],
-                    yAxes: [{
-                        stacked: true
-                    }]
-                },
-                hover: {
-                    animationDuration: 0
-                },
-                animation: {
-                    duration: 1,
-                    onComplete: function () {
-                        var chartInstance = this.chart,
-                            ctx = chartInstance.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
+        barChartData.datasets[0].label = "Pregrado: " + sumPregrado;
+        barChartData.datasets[1].label = "Posgrado: " + sumPosgrado;
 
-                        this.data.datasets.forEach(function (dataset: any, i: any) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar: any, index: any) {
-                                var data = dataset.data[index];
-                                ctx.fillStyle = "black";
-                                ctx.fillText(data + "%", bar._model.x, bar._model.y);
-                            });
-                        });
-                    }
-                }
-            }
-        });
+        this.state.chart.options.title.display = true;
+        this.state.chart.options.legend.display = true;
+
+        this.state.chart.update();
     }
 
     onYearsFilterChange(yearsData: Array<KeyValue>) {
@@ -407,25 +434,35 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
     onApplyFilters() {
 
-        if (this.state.universitiesList.length == 0 &&
-            this.state.yearsList.length == 0 &&
-            this.state.periodsList.length == 0) {
-            this.setState({
-                universitiesList: this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value),
-                periodsList: this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value),
-                yearsList: this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value)
-            });
-        }
-
         this.setState({
             showLoadingDialog: true
         });
 
-        let dataRequest: any = {
-            universities: this.state.universitiesList,
-            years: this.state.yearsList,
-            periods: this.state.periodsList
+        let dataRequest: any = {};
+
+        if (this.state.universitiesList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+
+            let universitiesList = this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value);
+            let periodsList = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+            let yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+
+            dataRequest = {
+                universities: universitiesList,
+                years: yearsList,
+                periods: periodsList
+            };
         }
+        else {
+            dataRequest = {
+                universities: this.state.universitiesList,
+                years: this.state.yearsList,
+                periods: this.state.periodsList
+            };
+        }
+
+        this.validateFilterSelectedData();
 
         chartServices.GetStackedChartDataByYearPeriodUniversityCode(dataRequest).then(
             (res: AxiosResponse) => {
@@ -445,18 +482,65 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         );
     }
 
+    validateFilterSelectedData() {
+        if (this.state.selectedData.universities.length == 0) {
+            this.setState({
+                selectedData: {
+                    universities: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    periods: this.state.selectedData.periods,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+
+        if (this.state.selectedData.periods.length == 0) {
+            this.setState({
+                selectedData: {
+                    periods: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+
+        if (this.state.selectedData.years.length == 0) {
+            this.setState({
+                selectedData: {
+                    years: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    periods: this.state.selectedData.periods
+                }
+            });
+        }
+    }
+
     render() {
         return (
             <Loader show={this.state.showLoadingDialog} message={'Cargando...'}>
                 <div className="filter-container">
                     <div className="filter-item">
-                        <FilterComponent label="Años" selectedData={this.state.selectedData.years} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 10 : 7} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                        <FilterComponent label="Universidad" selectedData={this.state.selectedData.universities} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 12 : 9} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodos" selectedData={this.state.selectedData.periods} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 11 : 8} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Año" selectedData={this.state.selectedData.years} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 10 : 7} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Universidades" selectedData={this.state.selectedData.universities} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 12 : 9} data={this.state.filterData.universities} onChange={this.onUniversitiesFilterChange} />
+                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.periods} onApplyFilter={this.onApplyFilters} indexKey={this.props.indexKey == 2 ? 11 : 8} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
                     </div>
                 </div>
 

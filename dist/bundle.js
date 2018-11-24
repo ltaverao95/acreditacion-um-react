@@ -43682,10 +43682,25 @@ var react_loader_advanced_1 = __webpack_require__(/*! react-loader-advanced */ "
 var FilterServices_1 = __webpack_require__(/*! ../../services/FilterServices */ "./src/services/FilterServices.ts");
 var ChartServices_1 = __webpack_require__(/*! ../../services/ChartServices */ "./src/services/ChartServices.ts");
 var Filter_1 = __webpack_require__(/*! ../filter/Filter */ "./src/components/filter/Filter.tsx");
-__webpack_require__(/*! chart.js/dist/Chart.min.js */ "./node_modules/chart.js/dist/Chart.min.js");
-__webpack_require__(/*! chartjs-funnel/dist/chart.funnel.bundled.min.js */ "./node_modules/chartjs-funnel/dist/chart.funnel.bundled.min.js");
 var filterService = new FilterServices_1.FilterServices();
 var chartServices = new ChartServices_1.ChartServices();
+var barChartData = {
+    labels: new Array(),
+    datasets: [
+        {
+            label: 'Pregrado',
+            backgroundColor: "#A8CF45",
+            hoverBackgroundColor: "#A8CF45",
+            data: new Array()
+        },
+        {
+            label: 'Posgrado',
+            backgroundColor: "rgb(54, 162, 235)",
+            hoverBackgroundColor: "rgb(54, 162, 235)",
+            data: new Array()
+        }
+    ]
+};
 var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
     __extends(UMConteoTotalMatriculadosChart, _super);
     function UMConteoTotalMatriculadosChart(props) {
@@ -43730,6 +43745,54 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
     }
     UMConteoTotalMatriculadosChart.prototype.componentDidMount = function () {
         var _this = this;
+        var ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
+        this.setState({
+            chart: new Chart(ctx, {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    title: {
+                        display: false,
+                        text: 'Conteo total matriculados'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        enabled: false
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                                stacked: true,
+                            }],
+                        yAxes: [{
+                                stacked: true
+                            }]
+                    },
+                    hover: {
+                        animationDuration: 0
+                    },
+                    animation: {
+                        duration: 1,
+                        onComplete: function () {
+                            var chartInstance = this.chart, ctx = chartInstance.ctx;
+                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = "#fff";
+                            this.data.datasets.forEach(function (dataset, i) {
+                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                meta.data.forEach(function (bar, index) {
+                                    var data = dataset.data[index];
+                                    ctx.fillText(data + "%", bar._model.x, bar._model.y + 4);
+                                });
+                            });
+                        }
+                    }
+                }
+            })
+        });
         filterService.getFilterUniversities().then(function (res) {
             if (!res.data ||
                 !res.data.ResultData) {
@@ -43821,78 +43884,33 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
             _loop_1(i);
         }
         yearsFiltered = yearsFiltered.sort();
-        var barChartData = {
-            labels: yearsFiltered.slice(),
-            datasets: [
-                {
-                    label: 'Pregrado',
-                    backgroundColor: "rgb(255, 99, 132)",
-                    hoverBackgroundColor: "rgb(255, 99, 132)",
-                    data: new Array()
-                },
-                {
-                    label: 'Posgrado',
-                    backgroundColor: "rgb(54, 162, 235)",
-                    hoverBackgroundColor: "rgb(54, 162, 235)",
-                    data: new Array()
-                }
-            ]
-        };
+        var sumPregrado = 0;
+        var sumPosgrado = 0;
+        barChartData.labels = yearsFiltered.slice();
         var _loop_2 = function (i) {
             var _a, _b;
             var dataByYear = data.filter(function (x) { return x.Anio == yearsFiltered[i]; });
             var pregradoData = dataByYear.filter(function (x) { return x.Codigo == 1; }).map(function (x) { return parseFloat(x.PctDato); });
             var posgradoData = dataByYear.filter(function (x) { return x.Codigo == 2; }).map(function (x) { return parseFloat(x.PctDato); });
+            dataByYear.map(function (x) {
+                if (x.Codigo == 1) {
+                    sumPregrado += parseInt(x.Dato);
+                }
+                else {
+                    sumPosgrado += parseInt(x.Dato);
+                }
+            });
             (_a = barChartData.datasets[0].data).push.apply(_a, pregradoData);
             (_b = barChartData.datasets[1].data).push.apply(_b, posgradoData);
         };
         for (var i = 0; i < yearsFiltered.length; i++) {
             _loop_2(i);
         }
-        var ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
-        new Chart(ctx, {
-            type: 'bar',
-            data: barChartData,
-            options: {
-                title: {
-                    display: true,
-                    text: 'Conteo total matriculados'
-                },
-                tooltips: {
-                    enabled: true
-                },
-                events: ['click'],
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                            stacked: true,
-                        }],
-                    yAxes: [{
-                            stacked: true
-                        }]
-                },
-                hover: {
-                    animationDuration: 0
-                },
-                animation: {
-                    duration: 1,
-                    onComplete: function () {
-                        var chartInstance = this.chart, ctx = chartInstance.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        this.data.datasets.forEach(function (dataset, i) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar, index) {
-                                var data = dataset.data[index];
-                                ctx.fillStyle = "black";
-                                ctx.fillText(data + "%", bar._model.x, bar._model.y);
-                            });
-                        });
-                    }
-                }
-            }
-        });
+        barChartData.datasets[0].label = "Pregrado: " + sumPregrado;
+        barChartData.datasets[1].label = "Posgrado: " + sumPosgrado;
+        this.state.chart.options.title.display = true;
+        this.state.chart.options.legend.display = true;
+        this.state.chart.update();
     };
     UMConteoTotalMatriculadosChart.prototype.onYearsFilterChange = function (yearsData) {
         this.setState({
@@ -44016,23 +44034,30 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
     };
     UMConteoTotalMatriculadosChart.prototype.onApplyFilters = function () {
         var _this = this;
-        if (this.state.universitiesList.length == 0 &&
-            this.state.yearsList.length == 0 &&
-            this.state.periodsList.length == 0) {
-            this.setState({
-                universitiesList: this.state.filterData.universities.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
-                periodsList: this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
-                yearsList: this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; })
-            });
-        }
         this.setState({
             showLoadingDialog: true
         });
-        var dataRequest = {
-            universities: this.state.universitiesList,
-            years: this.state.yearsList,
-            periods: this.state.periodsList
-        };
+        var dataRequest = {};
+        if (this.state.universitiesList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+            var universitiesList = this.state.filterData.universities.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+            var periodsList = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+            var yearsList = this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+            dataRequest = {
+                universities: universitiesList,
+                years: yearsList,
+                periods: periodsList
+            };
+        }
+        else {
+            dataRequest = {
+                universities: this.state.universitiesList,
+                years: this.state.yearsList,
+                periods: this.state.periodsList
+            };
+        }
+        this.validateFilterSelectedData();
         chartServices.GetStackedChartDataByYearPeriodUniversityCode(dataRequest).then(function (res) {
             _this.setState({
                 showLoadingDialog: false
@@ -44045,15 +44070,59 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
             _this.renderChart(data);
         });
     };
+    UMConteoTotalMatriculadosChart.prototype.validateFilterSelectedData = function () {
+        if (this.state.selectedData.universities.length == 0) {
+            this.setState({
+                selectedData: {
+                    universities: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    periods: this.state.selectedData.periods,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+        if (this.state.selectedData.periods.length == 0) {
+            this.setState({
+                selectedData: {
+                    periods: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+        if (this.state.selectedData.years.length == 0) {
+            this.setState({
+                selectedData: {
+                    years: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    periods: this.state.selectedData.periods
+                }
+            });
+        }
+    };
     UMConteoTotalMatriculadosChart.prototype.render = function () {
         return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' },
             React.createElement("div", { className: "filter-container" },
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1os", selectedData: this.state.selectedData.years, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 10 : 7, data: this.state.filterData.years, onChange: this.onYearsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "Universidad", selectedData: this.state.selectedData.universities, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 12 : 9, data: this.state.filterData.universities, onChange: this.onUniversitiesFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Periodos", selectedData: this.state.selectedData.periods, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 11 : 8, data: this.state.filterData.periods, onChange: this.onPeriodsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1o", selectedData: this.state.selectedData.years, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 10 : 7, data: this.state.filterData.years, onChange: this.onYearsFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Universidades", selectedData: this.state.selectedData.universities, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 12 : 9, data: this.state.filterData.universities, onChange: this.onUniversitiesFilterChange }))),
+                    React.createElement(Filter_1.FilterComponent, { label: "Periodo", selectedData: this.state.selectedData.periods, onApplyFilter: this.onApplyFilters, indexKey: this.props.indexKey == 2 ? 11 : 8, data: this.state.filterData.periods, onChange: this.onPeriodsFilterChange }))),
             React.createElement("div", { className: "applyfilterContainer" },
                 React.createElement("canvas", { id: "stacked-chart-" + this.props.indexKey, className: "chart" }))));
     };
@@ -44092,8 +44161,6 @@ var react_loader_advanced_1 = __webpack_require__(/*! react-loader-advanced */ "
 var FilterServices_1 = __webpack_require__(/*! ../../services/FilterServices */ "./src/services/FilterServices.ts");
 var ChartServices_1 = __webpack_require__(/*! ../../services/ChartServices */ "./src/services/ChartServices.ts");
 var Filter_1 = __webpack_require__(/*! ../filter/Filter */ "./src/components/filter/Filter.tsx");
-__webpack_require__(/*! chart.js/dist/Chart.min.js */ "./node_modules/chart.js/dist/Chart.min.js");
-__webpack_require__(/*! chartjs-funnel/dist/chart.funnel.bundled.min.js */ "./node_modules/chartjs-funnel/dist/chart.funnel.bundled.min.js");
 var filterService = new FilterServices_1.FilterServices();
 var chartServices = new ChartServices_1.ChartServices();
 var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
@@ -44160,20 +44227,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 !res.data.ResultData) {
                 return;
             }
-            var objData = res.data.ResultData;
-            objData = {
-                data: [
-                    objData.PorcentajeInscritos,
-                    objData.PorcentajeAdmitidos,
-                    objData.PorcentajeMatriculados
-                ],
-                labels: [
-                    "Inscritos: " + objData.Inscritos,
-                    "Admitidos: " + objData.Admitidos,
-                    "Matriculados: " + objData.Matriculados
-                ]
-            };
-            _this.renderChart(objData);
+            _this.renderChart(res.data.ResultData);
         });
     };
     UMMatriculadosPrimerCursoChart.prototype.componentDidMount = function () {
@@ -44230,25 +44284,38 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
         });
     };
     UMMatriculadosPrimerCursoChart.prototype.renderChart = function (data) {
+        var objData = data;
+        objData = {
+            data: [
+                parseFloat(objData.PorcentajeInscritos),
+                parseFloat(objData.PorcentajeAdmitidos),
+                parseFloat(objData.PorcentajeMatriculados)
+            ],
+            labels: [
+                "Inscritos: " + objData.Inscritos,
+                "Matriculados: " + objData.Matriculados,
+                "Admitidos: " + objData.Admitidos,
+            ]
+        };
         var ctx = document.getElementById("cone-chart-" + this.props.indexKey);
         Chart.defaults.global.defaultFontSize = 16;
         var config = {
             type: 'funnel',
             data: {
                 datasets: [{
-                        data: data.data,
+                        data: objData.data,
                         backgroundColor: [
-                            "#FF6384",
+                            "#A8CF45",
                             "#36A2EB",
                             "#FFCE56"
                         ],
                         hoverBackgroundColor: [
-                            "#FF6384",
+                            "#A8CF45",
                             "#36A2EB",
                             "#FFCE56"
                         ]
                     }],
-                labels: data.labels.slice()
+                labels: objData.labels.slice()
             },
             options: {
                 responsive: true,
@@ -44266,7 +44333,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 hover: {
                     animationDuration: 0
                 },
-                events: new Array(),
+                events: ['click'],
                 animation: {
                     duration: 1,
                     onComplete: function () {
@@ -44274,11 +44341,11 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                         ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'top';
+                        ctx.fillStyle = "#fff";
                         this.data.datasets.forEach(function (dataset, i) {
                             var meta = chartInstance.controller.getDatasetMeta(i);
                             meta.data.forEach(function (bar, index) {
                                 var data = dataset.data[index];
-                                ctx.fillStyle = "black";
                                 ctx.fillText(data + "%", bar._model.x, bar._model.y + 30);
                             });
                         });
@@ -44410,23 +44477,30 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
     };
     UMMatriculadosPrimerCursoChart.prototype.onApplyFilters = function () {
         var _this = this;
-        if (this.state.universitiesList.length == 0 &&
-            this.state.yearsList.length == 0 &&
-            this.state.periodsList.length == 0) {
-            this.setState({
-                universitiesList: this.state.filterData.universities.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
-                periodsList: this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; }),
-                yearsList: this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; })
-            });
-        }
         this.setState({
             showLoadingDialog: true
         });
-        var dataRequest = {
-            universities: this.state.universitiesList,
-            years: this.state.yearsList,
-            periods: this.state.periodsList
-        };
+        var dataRequest = {};
+        if (this.state.universitiesList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+            var universitiesList = this.state.filterData.universities.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+            var periodsList = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+            var yearsList = this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+            dataRequest = {
+                universities: universitiesList,
+                years: yearsList,
+                periods: periodsList
+            };
+        }
+        else {
+            dataRequest = {
+                universities: this.state.universitiesList,
+                years: this.state.yearsList,
+                periods: this.state.periodsList
+            };
+        }
+        this.validateFilterSelectedData();
         chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(function (res) {
             _this.setState({
                 showLoadingDialog: false
@@ -44435,31 +44509,62 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 !res.data.ResultData) {
                 return;
             }
-            var objData = res.data.ResultData;
-            objData = {
-                data: [
-                    objData.PorcentajeInscritos,
-                    objData.PorcentajeAdmitidos,
-                    objData.PorcentajeMatriculados
-                ],
-                labels: [
-                    "Inscritos: " + objData.Inscritos,
-                    "Admitidos: " + objData.Admitidos,
-                    "Matriculados: " + objData.Matriculados
-                ]
-            };
-            _this.renderChart(objData);
+            _this.renderChart(res.data.ResultData);
         });
+    };
+    UMMatriculadosPrimerCursoChart.prototype.validateFilterSelectedData = function () {
+        if (this.state.selectedData.universities.length == 0) {
+            this.setState({
+                selectedData: {
+                    universities: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    periods: this.state.selectedData.periods,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+        if (this.state.selectedData.periods.length == 0) {
+            this.setState({
+                selectedData: {
+                    periods: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+        if (this.state.selectedData.years.length == 0) {
+            this.setState({
+                selectedData: {
+                    years: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    periods: this.state.selectedData.periods
+                }
+            });
+        }
     };
     UMMatriculadosPrimerCursoChart.prototype.render = function () {
         return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' },
             React.createElement("div", { className: "filter-container" },
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1os", selectedData: this.state.selectedData.years, indexKey: this.props.indexKey == 2 ? 4 : 1, data: this.state.filterData.years, onApplyFilter: this.onApplyFilters, onChange: this.onYearsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "Universidad", selectedData: this.state.selectedData.universities, indexKey: this.props.indexKey == 2 ? 6 : 3, data: this.state.filterData.universities, onApplyFilter: this.onApplyFilters, onChange: this.onUniversitiesFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Periodos", selectedData: this.state.selectedData.periods, indexKey: this.props.indexKey == 2 ? 5 : 2, data: this.state.filterData.periods, onApplyFilter: this.onApplyFilters, onChange: this.onPeriodsFilterChange })),
+                    React.createElement(Filter_1.FilterComponent, { label: "A\u00F1o", selectedData: this.state.selectedData.years, indexKey: this.props.indexKey == 2 ? 4 : 1, data: this.state.filterData.years, onApplyFilter: this.onApplyFilters, onChange: this.onYearsFilterChange })),
                 React.createElement("div", { className: "filter-item" },
-                    React.createElement(Filter_1.FilterComponent, { label: "Universidades", selectedData: this.state.selectedData.universities, indexKey: this.props.indexKey == 2 ? 6 : 3, data: this.state.filterData.universities, onApplyFilter: this.onApplyFilters, onChange: this.onUniversitiesFilterChange }))),
+                    React.createElement(Filter_1.FilterComponent, { label: "Periodo", selectedData: this.state.selectedData.periods, indexKey: this.props.indexKey == 2 ? 5 : 2, data: this.state.filterData.periods, onApplyFilter: this.onApplyFilters, onChange: this.onPeriodsFilterChange }))),
             React.createElement("div", { className: "applyfilterContainer" },
                 React.createElement("canvas", { id: "cone-chart-" + this.props.indexKey, className: "chart" }))));
     };
@@ -44498,12 +44603,13 @@ __webpack_require__(/*! bootstrap/dist/css/bootstrap.min.css */ "./node_modules/
 __webpack_require__(/*! ./assets/images/logo.png */ "./src/assets/images/logo.png");
 __webpack_require__(/*! ./assets/images/logo-con-acreditación.png */ "./src/assets/images/logo-con-acreditación.png");
 var Home_1 = __webpack_require__(/*! ./components/home/Home */ "./src/components/home/Home.tsx");
+__webpack_require__(/*! chart.js/dist/Chart.min.js */ "./node_modules/chart.js/dist/Chart.min.js");
+__webpack_require__(/*! chartjs-funnel/dist/chart.funnel.bundled.min.js */ "./node_modules/chartjs-funnel/dist/chart.funnel.bundled.min.js");
+Chart.defaults.global.defaultFontSize = 16;
+Chart.Legend.prototype.afterFit = function () {
+    this.height = this.height + 20;
+};
 var rootApp = document.getElementById("root-app");
-var ISDEV = false;
-if (true) {
-    console.log("dev stage");
-    ISDEV = true;
-}
 ReactDOM.render(React.createElement(Home_1.HomeComponent, null), rootApp);
 
 

@@ -11,8 +11,6 @@ import { FilterServices } from '../../services/FilterServices';
 import { ChartServices } from '../../services/ChartServices';
 import { FilterComponent } from '../filter/Filter';
 
-require('chart.js/dist/Chart.min.js');
-require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
 declare let Chart: any;
 
 let filterService = new FilterServices();
@@ -100,21 +98,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     return;
                 }
 
-                let objData = res.data.ResultData;
-                objData = {
-                    data: [
-                        objData.PorcentajeInscritos, 
-                        objData.PorcentajeAdmitidos, 
-                        objData.PorcentajeMatriculados
-                    ],
-                    labels: [
-                        "Inscritos: " + objData.Inscritos, 
-                        "Admitidos: " + objData.Admitidos, 
-                        "Matriculados: " + objData.Matriculados
-                    ]
-                };
-
-                this.renderChart(objData);
+                this.renderChart(res.data.ResultData);
             }
         );
     }
@@ -189,26 +173,41 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
     }
 
     renderChart(data: any) {
+
+        let objData = data;
+        objData = {
+            data: [
+                parseFloat(objData.PorcentajeInscritos),
+                parseFloat(objData.PorcentajeAdmitidos),
+                parseFloat(objData.PorcentajeMatriculados)
+            ],
+            labels: [
+                "Inscritos: " + objData.Inscritos,
+                "Matriculados: " + objData.Matriculados,
+                "Admitidos: " + objData.Admitidos,
+            ]
+        };
+
         let ctx = document.getElementById("cone-chart-" + this.props.indexKey);
         Chart.defaults.global.defaultFontSize = 16;
         let config = {
             type: 'funnel',
             data: {
                 datasets: [{
-                    data: data.data,
+                    data: objData.data,
                     backgroundColor: [
-                        "#FF6384",
+                        "#A8CF45",
                         "#36A2EB",
                         "#FFCE56"
                     ],
                     hoverBackgroundColor: [
-                        "#FF6384",
+                        "#A8CF45",
                         "#36A2EB",
                         "#FFCE56"
                     ]
                 }],
                 labels: [
-                    ...data.labels
+                    ...objData.labels
                 ]
             },
             options: {
@@ -227,7 +226,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 hover: {
                     animationDuration: 0
                 },
-                events: new Array<any>(),
+                events: ['click'],
                 animation: {
                     duration: 1,
                     onComplete: function () {
@@ -236,12 +235,12 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                         ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'top';
+                        ctx.fillStyle = "#fff";
 
                         this.data.datasets.forEach(function (dataset: any, i: any) {
                             var meta = chartInstance.controller.getDatasetMeta(i);
                             meta.data.forEach(function (bar: any, index: any) {
                                 var data = dataset.data[index];
-                                ctx.fillStyle = "black";
                                 ctx.fillText(data + "%", bar._model.x, bar._model.y + 30);
                             });
                         });
@@ -394,25 +393,35 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
     onApplyFilters() {
 
-        if (this.state.universitiesList.length == 0 &&
-            this.state.yearsList.length == 0 &&
-            this.state.periodsList.length == 0) {
-            this.setState({
-                universitiesList: this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value),
-                periodsList: this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value),
-                yearsList: this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value)
-            });
-        }
-
         this.setState({
             showLoadingDialog: true
         });
 
-        let dataRequest: any = {
-            universities: this.state.universitiesList,
-            years: this.state.yearsList,
-            periods: this.state.periodsList
+        let dataRequest: any = {};
+
+        if (this.state.universitiesList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+
+            let universitiesList = this.state.filterData.universities.filter(x => x.value != 'select_all').map(x => x.value);
+            let periodsList = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+            let yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+
+            dataRequest = {
+                universities: universitiesList,
+                years: yearsList,
+                periods: periodsList
+            };
         }
+        else {
+            dataRequest = {
+                universities: this.state.universitiesList,
+                years: this.state.yearsList,
+                periods: this.state.periodsList
+            };
+        }
+
+        this.validateFilterSelectedData();
 
         chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(
             (res: AxiosResponse) => {
@@ -426,23 +435,56 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     return;
                 }
 
-                let objData = res.data.ResultData;
-                objData = {
-                    data: [
-                        objData.PorcentajeInscritos, 
-                        objData.PorcentajeAdmitidos, 
-                        objData.PorcentajeMatriculados
-                    ],
-                    labels: [
-                        "Inscritos: " + objData.Inscritos, 
-                        "Admitidos: " + objData.Admitidos, 
-                        "Matriculados: " + objData.Matriculados
-                    ]
-                };
-
-                this.renderChart(objData);
+                this.renderChart(res.data.ResultData);
             }
         );
+    }
+
+    validateFilterSelectedData() {
+        if (this.state.selectedData.universities.length == 0) {
+            this.setState({
+                selectedData: {
+                    universities: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    periods: this.state.selectedData.periods,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+
+        if (this.state.selectedData.periods.length == 0) {
+            this.setState({
+                selectedData: {
+                    periods: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+
+        if (this.state.selectedData.years.length == 0) {
+            this.setState({
+                selectedData: {
+                    years: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    periods: this.state.selectedData.periods
+                }
+            });
+        }
     }
 
     render() {
@@ -450,13 +492,14 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
             <Loader show={this.state.showLoadingDialog} message={'Cargando...'}>
                 <div className="filter-container">
                     <div className="filter-item">
-                        <FilterComponent label="Años" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 4 : 1} data={this.state.filterData.years} onApplyFilter={this.onApplyFilters} onChange={this.onYearsFilterChange} />
+                        <FilterComponent label="Universidad" selectedData={this.state.selectedData.universities} indexKey={this.props.indexKey == 2 ? 6 : 3} data={this.state.filterData.universities} onApplyFilter={this.onApplyFilters} onChange={this.onUniversitiesFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodos" selectedData={this.state.selectedData.periods} indexKey={this.props.indexKey == 2 ? 5 : 2} data={this.state.filterData.periods} onApplyFilter={this.onApplyFilters} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Año" selectedData={this.state.selectedData.years} indexKey={this.props.indexKey == 2 ? 4 : 1} data={this.state.filterData.years} onApplyFilter={this.onApplyFilters} onChange={this.onYearsFilterChange} />
+
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Universidades" selectedData={this.state.selectedData.universities} indexKey={this.props.indexKey == 2 ? 6 : 3} data={this.state.filterData.universities} onApplyFilter={this.onApplyFilters} onChange={this.onUniversitiesFilterChange} />
+                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.periods} indexKey={this.props.indexKey == 2 ? 5 : 2} data={this.state.filterData.periods} onApplyFilter={this.onApplyFilters} onChange={this.onPeriodsFilterChange} />
                     </div>
                 </div>
 

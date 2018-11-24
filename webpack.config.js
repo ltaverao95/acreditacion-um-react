@@ -48,10 +48,6 @@ module.exports = {
 
     plugins: [
 
-        new webpack.DefinePlugin({
-            __DEV__: "'dev'"
-        }),
-
         new LiveReloadPlugin({ appendScriptTag: true })
     ],
 

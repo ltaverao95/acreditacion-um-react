@@ -7,14 +7,17 @@ import './assets/images/logo-con-acreditación.png';
 
 import { HomeComponent } from './components/home/Home';
 
-const rootApp = document.getElementById("root-app");
+require('chart.js/dist/Chart.min.js');
+require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
+//require('chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js');
+declare let Chart: any;
 
-declare const __DEV__: string; // from webpack
-let ISDEV: boolean = false;
-if (__DEV__ == "dev") {
-    console.log("dev stage");
-    ISDEV = true;
-}
+Chart.defaults.global.defaultFontSize = 16;
+Chart.Legend.prototype.afterFit = function() {
+    this.height = this.height + 20;
+};
+
+const rootApp = document.getElementById("root-app");
 
 ReactDOM.render(
     <HomeComponent />,
