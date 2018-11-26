@@ -182,14 +182,13 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 parseFloat(objData.PorcentajeMatriculados)
             ],
             labels: [
-                "Inscritos: " + objData.Inscritos,
-                "Matriculados: " + objData.Matriculados,
-                "Admitidos: " + objData.Admitidos,
+                "Inscritos: " + parseInt(objData.Inscritos).toLocaleString(),
+                "Admitidos: " + parseInt(objData.Admitidos).toLocaleString(),
+                "Matriculados: " + parseInt(objData.Matriculados).toLocaleString()
             ]
         };
 
         let ctx = document.getElementById("cone-chart-" + this.props.indexKey);
-        Chart.defaults.global.defaultFontSize = 16;
         let config = {
             type: 'funnel',
             data: {

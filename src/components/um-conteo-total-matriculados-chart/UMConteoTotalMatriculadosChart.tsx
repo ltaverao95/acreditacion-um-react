@@ -104,7 +104,18 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                         display: false
                     },
                     tooltips: {
-                        enabled: false
+                        enabled: false/*,
+                        callbacks: {
+                            label: function(tooltipItem: any, data: any) {
+                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+            
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += Math.round(tooltipItem.yLabel * 100) / 100;
+                                return label;
+                            }
+                        }*/
                     },
                     responsive: true,
                     scales: {
@@ -127,12 +138,12 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'top';
                             ctx.fillStyle = "#fff";
-
-                            this.data.datasets.forEach(function (dataset: any, i: number) {
+    
+                            this.data.datasets.forEach(function (dataset: any, i: any) {
                                 var meta = chartInstance.controller.getDatasetMeta(i);
-                                meta.data.forEach(function (bar: any, index: number) {
+                                meta.data.forEach(function (bar: any, index: any) {
                                     var data = dataset.data[index];
-                                    ctx.fillText(data + "%", bar._model.x, bar._model.y + 4);
+                                    ctx.fillText(data.toLocaleString(), bar._model.x, bar._model.y);
                                 });
                             });
                         }
@@ -258,34 +269,21 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         yearsFiltered = yearsFiltered.sort();
 
-        let sumPregrado: number = 0;
-        let sumPosgrado: number = 0;
-
         barChartData.labels = [...yearsFiltered];
+
+        let pregradoData: Array<any> = [];
+        let posgradoData: Array<any> = [];
 
         for (let i = 0; i < yearsFiltered.length; i++) {
 
             let dataByYear: Array<any> = data.filter(x => x.Anio == yearsFiltered[i]);
 
-            let pregradoData: Array<any> = dataByYear.filter(x => x.Codigo == 1).map(x => parseFloat(x.PctDato));
-            let posgradoData: Array<any> = dataByYear.filter(x => x.Codigo == 2).map(x => parseFloat(x.PctDato));
-
-            dataByYear.map(x => {
-
-                if (x.Codigo == 1) {
-                    sumPregrado += parseInt(x.Dato);
-                }
-                else {
-                    sumPosgrado += parseInt(x.Dato);
-                }
-            });
-
-            barChartData.datasets[0].data.push(...pregradoData);
-            barChartData.datasets[1].data.push(...posgradoData);
+            pregradoData.push(...dataByYear.filter(x => x.Codigo == 1).map(x => parseInt(x.Dato)));
+            posgradoData.push(...dataByYear.filter(x => x.Codigo == 2).map(x => parseInt(x.Dato)));
         }
 
-        barChartData.datasets[0].label = "Pregrado: " + sumPregrado;
-        barChartData.datasets[1].label = "Posgrado: " + sumPosgrado;
+        barChartData.datasets[0].data = pregradoData;
+        barChartData.datasets[1].data = posgradoData;
 
         this.state.chart.options.title.display = true;
         this.state.chart.options.legend.display = true;
