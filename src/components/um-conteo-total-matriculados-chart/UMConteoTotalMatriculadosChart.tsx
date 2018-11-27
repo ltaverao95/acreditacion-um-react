@@ -104,18 +104,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                         display: false
                     },
                     tooltips: {
-                        enabled: false/*,
-                        callbacks: {
-                            label: function(tooltipItem: any, data: any) {
-                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
-            
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += Math.round(tooltipItem.yLabel * 100) / 100;
-                                return label;
-                            }
-                        }*/
+                        enabled: false
                     },
                     responsive: true,
                     scales: {
@@ -143,7 +132,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                                 var meta = chartInstance.controller.getDatasetMeta(i);
                                 meta.data.forEach(function (bar: any, index: any) {
                                     var data = dataset.data[index];
-                                    ctx.fillText(data.toLocaleString(), bar._model.x, bar._model.y);
+                                    ctx.fillText(parseInt(data).toLocaleString(), bar._model.x, bar._model.y);
                                 });
                             });
                         }

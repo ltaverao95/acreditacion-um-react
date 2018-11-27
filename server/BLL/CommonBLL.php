@@ -85,6 +85,39 @@
             
             return $responseDTO;
         }
+        
+        public function GetPieChartDataByYearDepartmentPeriodCode($data)
+        {
+            $responseDTO = new ResponseDTO();
+	
+            try 
+            {
+                $commonDAL = new CommonDAL();
+                $responseDTO = $commonDAL->GetPieChartDataByYearDepartmentPeriodCode($data);
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+            
+            return $responseDTO;
+        }
+
+        public function CleanDataBase(){
+            $responseDTO = new ResponseDTO();
+	
+            try 
+            {
+                $commonDAL = new CommonDAL();
+                $responseDTO = $commonDAL->CleanDataBase();
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+            
+            return $responseDTO;
+        }
 
         public function GetProgramas()
         {

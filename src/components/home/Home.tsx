@@ -72,7 +72,10 @@ export class HomeComponent extends React.Component<any, undefined> {
                         <UMConteoTotalMatriculadosChart indexKey={2} />
                     </div>
                     <div className="column7">
-                    {/*
+
+                        <UMMatriculadosDepartamentoChart indexKey={1} />
+
+                        {/*
                         <UMMatriculadosDepartamentoChart indexKey={1} />
 
                         <br />
@@ -82,7 +85,7 @@ export class HomeComponent extends React.Component<any, undefined> {
                         <br />
 
                         <MatrixComponent label="Matriz de totales matrículas" />
-                    */}
+                        */}
                     </div>
                     <div className="column8"></div>
                     <div className="column9"></div>

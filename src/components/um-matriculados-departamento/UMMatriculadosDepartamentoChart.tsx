@@ -1,23 +1,41 @@
 import * as React from "react";
 import { AxiosResponse } from 'axios';
+import Loader from 'react-loader-advanced';
 
 import {
     KeyValue,
     IUMChartProps,
     IUMChartState
 } from "../../models";
-import {
-    FilterServices
-} from '../../services/FilterServices';
+import { FilterServices } from '../../services/FilterServices';
+import { ChartServices } from '../../services/ChartServices';
 import { FilterComponent } from '../filter/Filter';
 
-require('chart.js/dist/Chart.min.js');
-require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
+let filterService: FilterServices = new FilterServices();
+let chartServices = new ChartServices();
+
 declare let Chart: any;
 
-let filterService: FilterServices = new FilterServices();
+interface OwnState {
+    chart?: any;
+    promisesCount?: number;
+    showLoadingDialog?: boolean;
+    departmentsList?: Array<KeyValue>;
+    yearsList?: Array<KeyValue>;
+    periodsList?: Array<KeyValue>;
+}
 
-export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartProps, IUMChartState> {
+export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartProps, IUMChartState & OwnState> {
+
+    private pieChartData: any = {
+        labels: new Array<any>(),
+        datasets: [
+            {
+                label: 'Departamentos',
+                data: new Array<any>()
+            }
+        ]
+    };
 
     constructor(props: IUMChartProps) {
 
@@ -30,10 +48,30 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                 departments: []
             },
             selectedData: {
-                years: [],
-                periods: [],
-                departments: []
-            }
+                years: [
+                    {
+                        label: 'Seleccionar Todo',
+                        value: 'select_all'
+                    }
+                ],
+                periods: [
+                    {
+                        label: 'Seleccionar Todo',
+                        value: 'select_all'
+                    }
+                ],
+                departments: [
+                    {
+                        label: 'Seleccionar Todo',
+                        value: 'select_all'
+                    }
+                ]
+            },
+            departmentsList: [],
+            periodsList: [],
+            yearsList: [],
+            promisesCount: 0,
+            showLoadingDialog: true
         };
 
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
@@ -43,7 +81,47 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
 
     componentDidMount() {
 
-        this.renderChart();
+        let ctx = document.getElementById("chart-pie-" + this.props.indexKey);
+        this.setState({
+            chart: new Chart(ctx, {
+                type: 'pie',
+                data: this.pieChartData,
+                options: {
+                    title: {
+                        display: false,
+                        text: 'Matriculados por departamento'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        enabled: true
+                    },
+                    responsive: true,
+                    hover: {
+                        animationDuration: 0
+                    },
+                    animation: {
+                        duration: 1,
+                        onComplete: function () {
+                            var chartInstance = this.chart,
+                                ctx = chartInstance.ctx;
+                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                
+                            this.data.datasets.forEach(function (dataset: any, i:any) {
+                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                meta.data.forEach(function (bar: any, index: any) {
+                                    var data = dataset.data[index];                            
+                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                });
+                            });
+                        }
+                    }
+                }
+            })
+        });
 
         filterService.getFilterYears().then(
             (res: AxiosResponse) => {
@@ -69,9 +147,12 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                     filterData: {
                         departments: this.state.filterData.departments,
                         periods: this.state.filterData.periods,
-                        years: years
-                    }
+                        years: years.sort((a, b) => a.label - b.label)
+                    },
+                    promisesCount: (this.state.promisesCount + 1)
                 });
+
+                this.renderChartAjax();
             }
         );
 
@@ -100,13 +181,51 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                         departments: departments,
                         periods: this.state.filterData.periods,
                         years: this.state.filterData.years
-                    }
+                    },
+                    promisesCount: (this.state.promisesCount + 1)
                 });
+
+                this.renderChartAjax();
             }
         );
     }
 
-    renderChart() {
+    renderChartAjax() {
+
+        if (this.state.promisesCount < 2) {
+            return;
+        }
+
+        this.setState({
+            promisesCount: 0,
+            showLoadingDialog: true
+        });
+
+        let data: any = {
+            departments: this.state.filterData.departments.filter(x => x.value != 'select_all').map(x => x.value),
+            years: this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value),
+            periods: this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value)
+        }
+
+        chartServices.GetPieChartDataByYearDepartmentPeriodCode(data).then(
+            (res: AxiosResponse) => {
+                this.setState({
+                    showLoadingDialog: false
+                });
+
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                let data = res.data.ResultData;
+
+                this.renderChart(data);
+            }
+        );
+    }
+
+    renderChart(data: any) {
         let chartColors = {
             red: 'rgb(255, 99, 132)',
             orange: 'rgb(255, 159, 64)',
@@ -117,61 +236,12 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
             grey: 'rgb(201, 203, 207)'
         };
 
-        let ctx = document.getElementById("chart-pie-" + this.props.indexKey);
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: [10, 20, 30],
-                    backgroundColor: [
-                        chartColors.red,
-                        chartColors.orange,
-                        chartColors.yellow,
-                        chartColors.green,
-                        chartColors.blue,
-                    ],
-                    label: 'Dataset 1'
-                }],
+        console.log(data);
 
-                // These labels appear in the legend and in the tooltips when hovering different arcs
-                labels: [
-                    'Red',
-                    'Yellow',
-                    'Blue'
-                ]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: 'Matriculados por departamento'
-                },
-                tooltips: {
-                    enabled: true
-                },
-                responsive: true,
-                hover: {
-                    animationDuration: 0
-                },
-                animation: {
-                    duration: 1,
-                    onComplete: function () {
-                        var chartInstance = this.chart,
-                            ctx = chartInstance.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-            
-                        this.data.datasets.forEach(function (dataset: any, i:any) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar: any, index: any) {
-                                var data = dataset.data[index];                            
-                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                            });
-                        });
-                    }
-                }
-            }
-        });
+        this.state.chart.options.title.display = true;
+        this.state.chart.options.legend.display = true;
+
+        this.state.chart.update();
     }
 
     onYearsFilterChange(data: Array<KeyValue>) {
@@ -225,25 +295,121 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
         }
     }
 
+    onApplyFilters() {
+
+        this.setState({
+            showLoadingDialog: true
+        });
+
+        let dataRequest: any = {};
+
+        if (this.state.departmentsList.length == 0 &&
+            this.state.yearsList.length == 0 &&
+            this.state.periodsList.length == 0) {
+
+            let departmentsList = this.state.filterData.departments.filter(x => x.value != 'select_all').map(x => x.value);
+            let periodsList = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+            let yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+
+            dataRequest = {
+                departmentsList: departmentsList,
+                years: yearsList,
+                periods: periodsList
+            };
+        }
+        else {
+            dataRequest = {
+                departmentsList: this.state.departmentsList,
+                years: this.state.yearsList,
+                periods: this.state.periodsList
+            };
+        }
+
+        this.validateFilterSelectedData();
+
+        chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(
+            (res: AxiosResponse) => {
+
+                this.setState({
+                    showLoadingDialog: false
+                });
+
+                if (!res.data ||
+                    !res.data.ResultData) {
+                    return;
+                }
+
+                this.renderChart(res.data.ResultData);
+            }
+        );
+    }
+
+    validateFilterSelectedData() {
+        if (this.state.selectedData.departments.length == 0) {
+            this.setState({
+                selectedData: {
+                    departments: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    periods: this.state.selectedData.periods,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+
+        if (this.state.selectedData.periods.length == 0) {
+            this.setState({
+                selectedData: {
+                    periods: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    years: this.state.selectedData.years
+                }
+            });
+        }
+
+        if (this.state.selectedData.years.length == 0) {
+            this.setState({
+                selectedData: {
+                    years: [
+                        {
+                            label: 'Seleccionar Todo',
+                            value: 'select_all'
+                        }
+                    ],
+                    universities: this.state.selectedData.universities,
+                    periods: this.state.selectedData.periods
+                }
+            });
+        }
+    }
+
     render() {
         return (
-            <div>
+            <Loader show={this.state.showLoadingDialog} message={'Cargando...'}>
                 <div className="filter-container">
                     <div className="filter-item">
-                        <FilterComponent label="Departamento" selectedData={this.state.selectedData.departments} indexKey={13} data={this.state.filterData.departments} onChange={this.onDepartmentsFilterChange} />
+                        <FilterComponent label="Departamento" selectedData={this.state.selectedData.departments} onApplyFilter={this.onApplyFilters} indexKey={13} data={this.state.filterData.departments} onChange={this.onDepartmentsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Año" selectedData={this.state.selectedData.years} indexKey={14} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
+                        <FilterComponent label="Año" selectedData={this.state.selectedData.years} indexKey={14} onApplyFilter={this.onApplyFilters} data={this.state.filterData.years} onChange={this.onYearsFilterChange} />
                     </div>
                     <div className="filter-item">
-                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.periods} indexKey={15} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
+                        <FilterComponent label="Periodo" selectedData={this.state.selectedData.periods} indexKey={15} onApplyFilter={this.onApplyFilters} data={this.state.filterData.periods} onChange={this.onPeriodsFilterChange} />
                     </div>
                 </div>
 
                 <br />
 
                 <canvas id={"chart-pie-" + this.props.indexKey} className="chart"></canvas>
-            </div>
+            </Loader>
         );
     }
 

@@ -23,4 +23,8 @@ export class ChartServices{
     public GetStackedChartDataByYearPeriodUniversityCode(data: any){
         return axios.post(this._serverURL + "api/GetStackedChartDataByYearPeriodUniversityCode.php", data);
     }
+
+    public GetPieChartDataByYearDepartmentPeriodCode(data: any){
+        return axios.post(this._serverURL + "api/GetPieChartDataByYearDepartmentPeriodCode.php", data);
+    }
 }

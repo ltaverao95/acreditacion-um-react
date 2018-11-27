@@ -80,4 +80,11 @@
 		public $Dato = null;
 		public $PctDato = null;
 	}
+
+	class PieChartDTO{
+		public $Codigo = null;
+        public $Nombre = null;
+		public $Dato = null;
+        public $PorcentajeDato = null;
+	}
 ?>

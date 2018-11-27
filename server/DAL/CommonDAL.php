@@ -346,6 +346,165 @@
             return $responseDTO;
         }
 
+        public function GetPieChartDataByYearDepartmentPeriodCode($data)
+        {
+            $responseDTO = new ResponseDTO();
+            
+            try 
+            {
+                $dataBaseServicesBLL = new DataBaseServicesBLL();
+
+                $stringDepartments = "(";
+                for ($i=0; $i < count($data->departments); $i++) { 
+
+                    $currentValue = $data->departments[$i];
+
+                    if($i == (count($data->departments) - 1)){
+                        $stringDepartments = $stringDepartments."'".$currentValue."'";
+                        continue;
+                    }
+
+                    $stringDepartments = $stringDepartments."'".$currentValue."',";
+                }
+
+                $stringDepartments = $stringDepartments.")";
+
+                $stringYears = "(";
+                for ($i=0; $i < count($data->years); $i++) { 
+
+                    $currentValue = $data->years[$i];
+
+                    if($i == (count($data->years) - 1)){
+                        $stringYears = $stringYears.$currentValue;
+                        continue;
+                    }
+
+                    $stringYears = $stringYears.$currentValue.",";
+                }
+
+                $stringYears = $stringYears.")";
+
+                $stringPeriods = "(";
+                for ($i=0; $i < count($data->periods); $i++) { 
+
+                    $currentValue = $data->periods[$i];
+
+                    if($i == (count($data->periods) - 1)){
+                        $stringPeriods = $stringPeriods.$currentValue;
+                        continue;
+                    }
+
+                    $stringPeriods = $stringPeriods.$currentValue.",";
+                }
+
+                $stringPeriods = $stringPeriods.")";
+
+                $query = "select d.depto_codigo, d.depto_nombre, sum(b.dato) dato, (cast(sum(b.dato) as decimal)/cast(t.dato as decimal))*100 pct_dato from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_depto d on d.depto_codigo = b.codigo_depto_programa inner join ( select sum(b.dato) dato from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_depto d on d.depto_codigo = b.codigo_depto_programa where b.anio in $stringYears and b.semestre in $stringPeriods and d.depto_codigo in $stringDepartments and b.tipo = 3 ) t on 1=1 where b.anio in $stringYears and b.semestre in $stringPeriods and d.depto_codigo in $stringDepartments and b.tipo = 3 group by d.depto_codigo, d.depto_nombre, t.dato";
+                
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                //Recuperar los registros de la BD
+                $result = $dataBaseServicesBLL->Q->fetchAll();	
+                
+                if($result == null ||
+                  count($result) == 0)
+                {
+                    $responseDTO->UIMessage = "No hay items para mostrar";
+                    return $responseDTO;
+                }
+
+                $itemsList = array();
+                while ($row = array_shift($result)) 
+                {
+                    $pieChartDTO = new PieChartDTO();
+                    $pieChartDTO->Codigo = $row['depto_codigo'];
+                    $pieChartDTO->Nombre = $row['depto_nombre'];
+                    $pieChartDTO->Dato = $row['dato'];
+                    $pieChartDTO->PorcentajeDato = $row['pct_dato'];
+                    
+                    array_push($itemsList, $pieChartDTO);
+                }
+
+                if($itemsList == null)
+                {
+                    $responseDTO->UIMessage = "No se encontraron registros para mostrar";
+                    return $responseDTO;
+                } 
+                
+                $responseDTO->ResultData = $itemsList;
+                $dataBaseServicesBLL->connection = null;
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+
+            return $responseDTO;
+        }
+
+        public function CleanDataBase(){
+            $responseDTO = new ResponseDTO();
+	
+            try 
+            {
+                $dataBaseServicesBLL = new DataBaseServicesBLL();
+
+                $query = "delete from \"UAMSNIES\".base_poblacion_estudiantil;";
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                $query = "delete from \"UAMSNIES\".cmn_depto;";
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                $query = "delete from \"UAMSNIES\".cmn_institucion;";
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                $query = "delete from \"UAMSNIES\".cmn_listas;";
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                $query = "delete from \"UAMSNIES\".cmn_municipio;";
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                $query = "delete from \"UAMSNIES\".cmn_programa;";
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                $responseDTO->UIMessage = "Tablas borradas con exito.";
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema limpiando la base de datos", $e->getMessage());		
+            }
+            
+            return $responseDTO;
+        }
+
         public function GetProgramas()
         {
             $responseDTO = new ResponseDTO();
