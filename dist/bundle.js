@@ -77409,7 +77409,8 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
             datasets: [
                 {
                     label: 'Departamentos',
-                    data: new Array()
+                    data: new Array(),
+                    backgroundColor: new Array()
                 }
             ]
         };
@@ -77469,26 +77470,7 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
                     tooltips: {
                         enabled: true
                     },
-                    responsive: true,
-                    hover: {
-                        animationDuration: 0
-                    },
-                    animation: {
-                        duration: 1,
-                        onComplete: function () {
-                            var chartInstance = this.chart, ctx = chartInstance.ctx;
-                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'top';
-                            this.data.datasets.forEach(function (dataset, i) {
-                                var meta = chartInstance.controller.getDatasetMeta(i);
-                                meta.data.forEach(function (bar, index) {
-                                    var data = dataset.data[index];
-                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                                });
-                            });
-                        }
-                    }
+                    responsive: true
                 }
             })
         });
@@ -77571,9 +77553,14 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
     UMMatriculadosDepartamentoChart.prototype.renderChart = function (data) {
         console.log(data);
         this.pieChartData.labels = data.map(function (x) { return x.Nombre; });
-        this.pieChartData.datasets[0].data = data.map(function (x) { return parseFloat(x.PorcentajeDato); });
+        this.pieChartData.datasets[0].data = [];
+        this.pieChartData.datasets[0].backgroundColor = [];
+        for (var i = 0; i < data.length; i++) {
+            this.pieChartData.datasets[0].data.push(parseFloat(data[i].PorcentajeDato));
+            this.pieChartData.datasets[0].backgroundColor.push(this.dynamicColors());
+        }
         this.state.chart.options.title.display = true;
-        this.state.chart.options.legend.display = true;
+        //this.state.chart.options.legend.display = true;
         this.state.chart.update();
     };
     UMMatriculadosDepartamentoChart.prototype.onYearsFilterChange = function (yearsData) {
@@ -77776,6 +77763,12 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
                 }
             });
         }
+    };
+    UMMatriculadosDepartamentoChart.prototype.dynamicColors = function () {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
     };
     UMMatriculadosDepartamentoChart.prototype.render = function () {
         return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' },
