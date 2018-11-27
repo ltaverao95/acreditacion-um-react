@@ -77,6 +77,7 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
         this.onPeriodsFilterChange = this.onPeriodsFilterChange.bind(this);
         this.onDepartmentsFilterChange = this.onDepartmentsFilterChange.bind(this);
+        this.onApplyFilters = this.onApplyFilters.bind(this);
     }
 
     componentDidMount() {
@@ -178,7 +179,7 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
 
                 this.setState({
                     filterData: {
-                        departments: departments,
+                        departments,
                         periods: this.state.filterData.periods,
                         years: this.state.filterData.years
                     },
@@ -218,25 +219,17 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                     return;
                 }
 
-                let data = res.data.ResultData;
-
-                this.renderChart(data);
+                this.renderChart(res.data.ResultData);
             }
         );
     }
 
-    renderChart(data: any) {
-        let chartColors = {
-            red: 'rgb(255, 99, 132)',
-            orange: 'rgb(255, 159, 64)',
-            yellow: 'rgb(255, 205, 86)',
-            green: 'rgb(75, 192, 192)',
-            blue: 'rgb(54, 162, 235)',
-            purple: 'rgb(153, 102, 255)',
-            grey: 'rgb(201, 203, 207)'
-        };
+    renderChart(data: Array<any>) {
 
         console.log(data);
+
+        this.pieChartData.labels = data.map(x => x.Nombre);
+        this.pieChartData.datasets[0].data = data.map(x => parseFloat(x.PorcentajeDato));
 
         this.state.chart.options.title.display = true;
         this.state.chart.options.legend.display = true;
@@ -244,55 +237,143 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
         this.state.chart.update();
     }
 
-    onYearsFilterChange(data: Array<KeyValue>) {
+    onYearsFilterChange(yearsData: Array<KeyValue>) {
+
         this.setState({
             selectedData: {
-                years: data,
+                years: yearsData,
                 periods: this.state.selectedData.periods,
-                universities: this.state.selectedData.universities
+                departments: this.state.selectedData.departments
             }
         });
 
-        let isSelectedAll = data.find(x => x.value == 'select_all');
-        if (isSelectedAll) {
-                data = this.state.filterData.years.filter(x => x.value != 'select_all');
-                console.log(data);
-            return;
+        let isSelectedAllYears = yearsData.find(x => x.value == 'select_all');
+        let isSelectedAllDepartments = this.state.selectedData.departments.find(x => x.value == 'select_all');
+        let isSelectedAllPeriods = this.state.selectedData.periods.find(x => x.value == 'select_all');
+        let departmentsList = [];
+        let periodsList = [];
+
+        if (isSelectedAllDepartments ||
+            this.state.selectedData.departments.length == 0) {
+            departmentsList = this.state.filterData.departments.filter(x => x.value != 'select_all').map(x => x.value);
         }
+        else {
+            departmentsList = this.state.selectedData.departments.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllPeriods ||
+            this.state.selectedData.periods.length == 0) {
+            periodsList = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            periodsList = this.state.selectedData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllYears ||
+            yearsData.length == 0) {
+            yearsData = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            yearsData = yearsData.map(x => x.value);
+        }
+
+        this.setState({
+            departmentsList,
+            periodsList,
+            yearsList: yearsData
+        });
     }
 
-    onPeriodsFilterChange(data: Array<KeyValue>) {
+    onPeriodsFilterChange(periodsData: Array<KeyValue>) {
         this.setState({
             selectedData: {
                 years: this.state.selectedData.years,
-                periods: data,
-                universities: this.state.selectedData.universities
+                periods: periodsData,
+                departments: this.state.selectedData.departments
             }
         });
 
-        let isSelectedAll = data.find(x => x.value == 'select_all');
-        if (isSelectedAll) {
-                data = this.state.filterData.periods.filter(x => x.value != 'select_all');
-                console.log(data);
-            return;
+        let isSelectedAllYears = this.state.selectedData.years.find(x => x.value == 'select_all');
+        let isSelectedAllDepartments = this.state.selectedData.departments.find(x => x.value == 'select_all');
+        let isSelectedAllPeriods = periodsData.find(x => x.value == 'select_all');
+        let departmentsList = [];
+        let yearsList = [];
+
+        if (isSelectedAllDepartments ||
+            this.state.selectedData.departments.length == 0) {
+            departmentsList = this.state.filterData.departments.filter(x => x.value != 'select_all').map(x => x.value);
         }
+        else {
+            departmentsList = this.state.selectedData.departments.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllYears ||
+            this.state.selectedData.years.length == 0) {
+            yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            yearsList = this.state.selectedData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllPeriods ||
+            periodsData.length == 0) {
+            periodsData = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            periodsData = periodsData.map(x => x.value);
+        }
+
+        this.setState({
+            departmentsList,
+            yearsList,
+            periodsList: periodsData
+        });
     }
 
-    onDepartmentsFilterChange(data: Array<KeyValue>) {
+    onDepartmentsFilterChange(departmentsData: Array<KeyValue>) {
         this.setState({
             selectedData: {
                 years: this.state.selectedData.years,
                 periods: this.state.selectedData.periods,
-                departments: data
+                departments: departmentsData
             }
         });
 
-        let isSelectedAll = data.find(x => x.value == 'select_all');
-        if (isSelectedAll) {
-                data = this.state.filterData.departments.filter(x => x.value != 'select_all');
-                console.log(data);
-            return;
+        let isSelectedAllYears = this.state.selectedData.years.find(x => x.value == 'select_all');
+        let isSelectedAllDepartments = departmentsData.find(x => x.value == 'select_all');
+        let isSelectedAllPeriods = this.state.selectedData.periods.find(x => x.value == 'select_all');
+        let periodsList = [];
+        let yearsList = [];
+
+        if (isSelectedAllPeriods ||
+            this.state.selectedData.periods.length == 0) {
+            periodsList = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
         }
+        else {
+            periodsList = this.state.selectedData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllYears ||
+            this.state.selectedData.years.length == 0) {
+            yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            yearsList = this.state.selectedData.years.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+
+        if (isSelectedAllDepartments ||
+            departmentsData.length == 0) {
+            departmentsData = this.state.filterData.periods.filter(x => x.value != 'select_all').map(x => x.value);
+        }
+        else {
+            departmentsData = departmentsData.map(x => x.value);
+        }
+
+        this.setState({
+            departmentsList: departmentsData,
+            yearsList,
+            periodsList
+        });
     }
 
     onApplyFilters() {
@@ -312,14 +393,14 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
             let yearsList = this.state.filterData.years.filter(x => x.value != 'select_all').map(x => x.value);
 
             dataRequest = {
-                departmentsList: departmentsList,
+                departments: departmentsList,
                 years: yearsList,
                 periods: periodsList
             };
         }
         else {
             dataRequest = {
-                departmentsList: this.state.departmentsList,
+                departments: this.state.departmentsList,
                 years: this.state.yearsList,
                 periods: this.state.periodsList
             };
@@ -327,7 +408,7 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
 
         this.validateFilterSelectedData();
 
-        chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(
+        chartServices.GetPieChartDataByYearDepartmentPeriodCode(dataRequest).then(
             (res: AxiosResponse) => {
 
                 this.setState({
@@ -369,7 +450,7 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                             value: 'select_all'
                         }
                     ],
-                    universities: this.state.selectedData.universities,
+                    departments: this.state.selectedData.departments,
                     years: this.state.selectedData.years
                 }
             });
@@ -384,7 +465,7 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                             value: 'select_all'
                         }
                     ],
-                    universities: this.state.selectedData.universities,
+                    departments: this.state.selectedData.departments,
                     periods: this.state.selectedData.periods
                 }
             });

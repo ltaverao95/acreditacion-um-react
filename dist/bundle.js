@@ -77448,6 +77448,7 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
         _this.onYearsFilterChange = _this.onYearsFilterChange.bind(_this);
         _this.onPeriodsFilterChange = _this.onPeriodsFilterChange.bind(_this);
         _this.onDepartmentsFilterChange = _this.onDepartmentsFilterChange.bind(_this);
+        _this.onApplyFilters = _this.onApplyFilters.bind(_this);
         return _this;
     }
     UMMatriculadosDepartamentoChart.prototype.componentDidMount = function () {
@@ -77564,69 +77565,136 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
                 !res.data.ResultData) {
                 return;
             }
-            var data = res.data.ResultData;
-            _this.renderChart(data);
+            _this.renderChart(res.data.ResultData);
         });
     };
     UMMatriculadosDepartamentoChart.prototype.renderChart = function (data) {
-        var chartColors = {
-            red: 'rgb(255, 99, 132)',
-            orange: 'rgb(255, 159, 64)',
-            yellow: 'rgb(255, 205, 86)',
-            green: 'rgb(75, 192, 192)',
-            blue: 'rgb(54, 162, 235)',
-            purple: 'rgb(153, 102, 255)',
-            grey: 'rgb(201, 203, 207)'
-        };
         console.log(data);
+        this.pieChartData.labels = data.map(function (x) { return x.Nombre; });
+        this.pieChartData.datasets[0].data = data.map(function (x) { return parseFloat(x.PorcentajeDato); });
         this.state.chart.options.title.display = true;
         this.state.chart.options.legend.display = true;
         this.state.chart.update();
     };
-    UMMatriculadosDepartamentoChart.prototype.onYearsFilterChange = function (data) {
+    UMMatriculadosDepartamentoChart.prototype.onYearsFilterChange = function (yearsData) {
         this.setState({
             selectedData: {
-                years: data,
+                years: yearsData,
                 periods: this.state.selectedData.periods,
-                universities: this.state.selectedData.universities
+                departments: this.state.selectedData.departments
             }
         });
-        var isSelectedAll = data.find(function (x) { return x.value == 'select_all'; });
-        if (isSelectedAll) {
-            data = this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; });
-            console.log(data);
-            return;
+        var isSelectedAllYears = yearsData.find(function (x) { return x.value == 'select_all'; });
+        var isSelectedAllDepartments = this.state.selectedData.departments.find(function (x) { return x.value == 'select_all'; });
+        var isSelectedAllPeriods = this.state.selectedData.periods.find(function (x) { return x.value == 'select_all'; });
+        var departmentsList = [];
+        var periodsList = [];
+        if (isSelectedAllDepartments ||
+            this.state.selectedData.departments.length == 0) {
+            departmentsList = this.state.filterData.departments.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
         }
+        else {
+            departmentsList = this.state.selectedData.departments.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        if (isSelectedAllPeriods ||
+            this.state.selectedData.periods.length == 0) {
+            periodsList = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        else {
+            periodsList = this.state.selectedData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        if (isSelectedAllYears ||
+            yearsData.length == 0) {
+            yearsData = this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        else {
+            yearsData = yearsData.map(function (x) { return x.value; });
+        }
+        this.setState({
+            departmentsList: departmentsList,
+            periodsList: periodsList,
+            yearsList: yearsData
+        });
     };
-    UMMatriculadosDepartamentoChart.prototype.onPeriodsFilterChange = function (data) {
+    UMMatriculadosDepartamentoChart.prototype.onPeriodsFilterChange = function (periodsData) {
         this.setState({
             selectedData: {
                 years: this.state.selectedData.years,
-                periods: data,
-                universities: this.state.selectedData.universities
+                periods: periodsData,
+                departments: this.state.selectedData.departments
             }
         });
-        var isSelectedAll = data.find(function (x) { return x.value == 'select_all'; });
-        if (isSelectedAll) {
-            data = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; });
-            console.log(data);
-            return;
+        var isSelectedAllYears = this.state.selectedData.years.find(function (x) { return x.value == 'select_all'; });
+        var isSelectedAllDepartments = this.state.selectedData.departments.find(function (x) { return x.value == 'select_all'; });
+        var isSelectedAllPeriods = periodsData.find(function (x) { return x.value == 'select_all'; });
+        var departmentsList = [];
+        var yearsList = [];
+        if (isSelectedAllDepartments ||
+            this.state.selectedData.departments.length == 0) {
+            departmentsList = this.state.filterData.departments.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
         }
+        else {
+            departmentsList = this.state.selectedData.departments.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        if (isSelectedAllYears ||
+            this.state.selectedData.years.length == 0) {
+            yearsList = this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        else {
+            yearsList = this.state.selectedData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        if (isSelectedAllPeriods ||
+            periodsData.length == 0) {
+            periodsData = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        else {
+            periodsData = periodsData.map(function (x) { return x.value; });
+        }
+        this.setState({
+            departmentsList: departmentsList,
+            yearsList: yearsList,
+            periodsList: periodsData
+        });
     };
-    UMMatriculadosDepartamentoChart.prototype.onDepartmentsFilterChange = function (data) {
+    UMMatriculadosDepartamentoChart.prototype.onDepartmentsFilterChange = function (departmentsData) {
         this.setState({
             selectedData: {
                 years: this.state.selectedData.years,
                 periods: this.state.selectedData.periods,
-                departments: data
+                departments: departmentsData
             }
         });
-        var isSelectedAll = data.find(function (x) { return x.value == 'select_all'; });
-        if (isSelectedAll) {
-            data = this.state.filterData.departments.filter(function (x) { return x.value != 'select_all'; });
-            console.log(data);
-            return;
+        var isSelectedAllYears = this.state.selectedData.years.find(function (x) { return x.value == 'select_all'; });
+        var isSelectedAllDepartments = departmentsData.find(function (x) { return x.value == 'select_all'; });
+        var isSelectedAllPeriods = this.state.selectedData.periods.find(function (x) { return x.value == 'select_all'; });
+        var periodsList = [];
+        var yearsList = [];
+        if (isSelectedAllPeriods ||
+            this.state.selectedData.periods.length == 0) {
+            periodsList = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
         }
+        else {
+            periodsList = this.state.selectedData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        if (isSelectedAllYears ||
+            this.state.selectedData.years.length == 0) {
+            yearsList = this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        else {
+            yearsList = this.state.selectedData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        if (isSelectedAllDepartments ||
+            departmentsData.length == 0) {
+            departmentsData = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
+        }
+        else {
+            departmentsData = departmentsData.map(function (x) { return x.value; });
+        }
+        this.setState({
+            departmentsList: departmentsData,
+            yearsList: yearsList,
+            periodsList: periodsList
+        });
     };
     UMMatriculadosDepartamentoChart.prototype.onApplyFilters = function () {
         var _this = this;
@@ -77641,20 +77709,20 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
             var periodsList = this.state.filterData.periods.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
             var yearsList = this.state.filterData.years.filter(function (x) { return x.value != 'select_all'; }).map(function (x) { return x.value; });
             dataRequest = {
-                departmentsList: departmentsList,
+                departments: departmentsList,
                 years: yearsList,
                 periods: periodsList
             };
         }
         else {
             dataRequest = {
-                departmentsList: this.state.departmentsList,
+                departments: this.state.departmentsList,
                 years: this.state.yearsList,
                 periods: this.state.periodsList
             };
         }
         this.validateFilterSelectedData();
-        chartServices.GetPyramidChartDataByYearPeriodUniversityCode(dataRequest).then(function (res) {
+        chartServices.GetPieChartDataByYearDepartmentPeriodCode(dataRequest).then(function (res) {
             _this.setState({
                 showLoadingDialog: false
             });
@@ -77689,7 +77757,7 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
                             value: 'select_all'
                         }
                     ],
-                    universities: this.state.selectedData.universities,
+                    departments: this.state.selectedData.departments,
                     years: this.state.selectedData.years
                 }
             });
@@ -77703,7 +77771,7 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
                             value: 'select_all'
                         }
                     ],
-                    universities: this.state.selectedData.universities,
+                    departments: this.state.selectedData.departments,
                     periods: this.state.selectedData.periods
                 }
             });
