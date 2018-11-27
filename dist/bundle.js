@@ -77780,7 +77780,8 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
                 React.createElement("div", { className: "filter-item" },
                     React.createElement(Filter_1.FilterComponent, { label: "Periodo", selectedData: this.state.selectedData.periods, indexKey: 15, onApplyFilter: this.onApplyFilters, data: this.state.filterData.periods, onChange: this.onPeriodsFilterChange }))),
             React.createElement("br", null),
-            React.createElement("canvas", { id: "chart-pie-" + this.props.indexKey, className: "chart" })));
+            React.createElement("div", { className: "chart" },
+                React.createElement("canvas", { id: "chart-pie-" + this.props.indexKey }))));
     };
     return UMMatriculadosDepartamentoChart;
 }(React.Component));

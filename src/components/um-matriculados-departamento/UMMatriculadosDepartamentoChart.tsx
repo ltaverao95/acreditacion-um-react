@@ -483,7 +483,10 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
 
                 <br />
 
-                <canvas id={"chart-pie-" + this.props.indexKey} className="chart"></canvas>
+                <div className="chart">
+                    <canvas id={"chart-pie-" + this.props.indexKey}></canvas>
+                </div>
+
             </Loader>
         );
     }
