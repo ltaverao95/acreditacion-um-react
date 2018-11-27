@@ -76930,27 +76930,27 @@ var ChartServices_1 = __webpack_require__(/*! ../../services/ChartServices */ ".
 var Filter_1 = __webpack_require__(/*! ../filter/Filter */ "./src/components/filter/Filter.tsx");
 var filterService = new FilterServices_1.FilterServices();
 var chartServices = new ChartServices_1.ChartServices();
-var barChartData = {
-    labels: new Array(),
-    datasets: [
-        {
-            label: 'Pregrado',
-            backgroundColor: "#A8CF45",
-            hoverBackgroundColor: "#A8CF45",
-            data: new Array()
-        },
-        {
-            label: 'Posgrado',
-            backgroundColor: "rgb(54, 162, 235)",
-            hoverBackgroundColor: "rgb(54, 162, 235)",
-            data: new Array()
-        }
-    ]
-};
 var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
     __extends(UMConteoTotalMatriculadosChart, _super);
     function UMConteoTotalMatriculadosChart(props) {
         var _this = _super.call(this, props) || this;
+        _this.barChartData = {
+            labels: new Array(),
+            datasets: [
+                {
+                    label: 'Pregrado',
+                    backgroundColor: "#A8CF45",
+                    hoverBackgroundColor: "#A8CF45",
+                    data: new Array()
+                },
+                {
+                    label: 'Posgrado',
+                    backgroundColor: "rgb(54, 162, 235)",
+                    hoverBackgroundColor: "rgb(54, 162, 235)",
+                    data: new Array()
+                }
+            ]
+        };
         _this.state = {
             filterData: {
                 years: [],
@@ -76995,7 +76995,7 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
         this.setState({
             chart: new Chart(ctx, {
                 type: 'bar',
-                data: barChartData,
+                data: this.barChartData,
                 options: {
                     title: {
                         display: false,
@@ -77141,7 +77141,7 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
             _loop_1(i);
         }
         yearsFiltered = yearsFiltered.sort();
-        barChartData.labels = yearsFiltered.slice();
+        this.barChartData.labels = yearsFiltered.slice();
         var pregradoData = [];
         var posgradoData = [];
         var _loop_2 = function (i) {
@@ -77152,8 +77152,8 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
         for (var i = 0; i < yearsFiltered.length; i++) {
             _loop_2(i);
         }
-        barChartData.datasets[0].data = pregradoData;
-        barChartData.datasets[1].data = posgradoData;
+        this.barChartData.datasets[0].data = pregradoData;
+        this.barChartData.datasets[1].data = posgradoData;
         this.state.chart.options.title.display = true;
         this.state.chart.options.legend.display = true;
         this.state.chart.update();
@@ -77476,66 +77476,16 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
             _this.renderChart(res.data.ResultData);
         });
     };
-    UMMatriculadosPrimerCursoChart.prototype.componentDidMount = function () {
-        var _this = this;
-        filterService.getFilterUniversities().then(function (res) {
-            if (!res.data ||
-                !res.data.ResultData) {
-                return;
-            }
-            var universities = res.data.ResultData.map(function (x) {
-                return {
-                    label: x.Nombre,
-                    value: x.Codigo
-                };
-            });
-            universities.unshift({
-                label: 'Seleccionar Todo',
-                value: 'select_all'
-            });
-            _this.setState({
-                filterData: {
-                    universities: universities,
-                    periods: _this.state.filterData.periods,
-                    years: _this.state.filterData.years
-                },
-                promisesCount: (_this.state.promisesCount + 1)
-            });
-            _this.renderChartAjax();
-        });
-        filterService.getFilterYears().then(function (res) {
-            if (!res.data ||
-                !res.data.ResultData) {
-                return;
-            }
-            var years = res.data.ResultData.map(function (x) {
-                return {
-                    label: x.Value,
-                    value: x.Value
-                };
-            });
-            years.unshift({
-                label: 'Seleccionar Todo',
-                value: 'select_all'
-            });
-            _this.setState({
-                filterData: {
-                    universities: _this.state.filterData.universities,
-                    periods: _this.state.filterData.periods,
-                    years: years.sort(function (a, b) { return a.label - b.label; })
-                },
-                promisesCount: (_this.state.promisesCount + 1)
-            });
-            _this.renderChartAjax();
-        });
-    };
     UMMatriculadosPrimerCursoChart.prototype.renderChart = function (data) {
         var objData = data;
         objData = {
             data: [
-                parseFloat(objData.PorcentajeInscritos),
+                /*parseFloat(objData.PorcentajeInscritos),
                 parseFloat(objData.PorcentajeAdmitidos),
-                parseFloat(objData.PorcentajeMatriculados)
+                parseFloat(objData.PorcentajeMatriculados)*/
+                parseInt(objData.Inscritos),
+                parseInt(objData.Admitidos),
+                parseInt(objData.Matriculados)
             ],
             labels: [
                 "Inscritos: " + parseInt(objData.Inscritos).toLocaleString(),
@@ -77591,7 +77541,7 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                             var meta = chartInstance.controller.getDatasetMeta(i);
                             meta.data.forEach(function (bar, index) {
                                 var data = dataset.data[index];
-                                ctx.fillText(data + "%", bar._model.x, bar._model.y + 30);
+                                ctx.fillText(parseInt(data).toLocaleString(), bar._model.x, bar._model.y + 30);
                             });
                         });
                     }
@@ -77599,6 +77549,59 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
             }
         };
         new Chart(ctx, config);
+    };
+    UMMatriculadosPrimerCursoChart.prototype.componentDidMount = function () {
+        var _this = this;
+        filterService.getFilterUniversities().then(function (res) {
+            if (!res.data ||
+                !res.data.ResultData) {
+                return;
+            }
+            var universities = res.data.ResultData.map(function (x) {
+                return {
+                    label: x.Nombre,
+                    value: x.Codigo
+                };
+            });
+            universities.unshift({
+                label: 'Seleccionar Todo',
+                value: 'select_all'
+            });
+            _this.setState({
+                filterData: {
+                    universities: universities,
+                    periods: _this.state.filterData.periods,
+                    years: _this.state.filterData.years
+                },
+                promisesCount: (_this.state.promisesCount + 1)
+            });
+            _this.renderChartAjax();
+        });
+        filterService.getFilterYears().then(function (res) {
+            if (!res.data ||
+                !res.data.ResultData) {
+                return;
+            }
+            var years = res.data.ResultData.map(function (x) {
+                return {
+                    label: x.Value,
+                    value: x.Value
+                };
+            });
+            years.unshift({
+                label: 'Seleccionar Todo',
+                value: 'select_all'
+            });
+            _this.setState({
+                filterData: {
+                    universities: _this.state.filterData.universities,
+                    periods: _this.state.filterData.periods,
+                    years: years.sort(function (a, b) { return a.label - b.label; })
+                },
+                promisesCount: (_this.state.promisesCount + 1)
+            });
+            _this.renderChartAjax();
+        });
     };
     UMMatriculadosPrimerCursoChart.prototype.onYearsFilterChange = function (yearsData) {
         this.setState({

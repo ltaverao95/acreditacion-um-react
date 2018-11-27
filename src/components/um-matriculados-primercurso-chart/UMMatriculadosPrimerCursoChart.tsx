@@ -103,6 +103,88 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         );
     }
 
+    renderChart(data: any) {
+
+        let objData = data;
+        objData = {
+            data: [
+                /*parseFloat(objData.PorcentajeInscritos),
+                parseFloat(objData.PorcentajeAdmitidos),
+                parseFloat(objData.PorcentajeMatriculados)*/
+                parseInt(objData.Inscritos),
+                parseInt(objData.Admitidos),
+                parseInt(objData.Matriculados)
+            ],
+            labels: [
+                "Inscritos: " + parseInt(objData.Inscritos).toLocaleString(),
+                "Admitidos: " + parseInt(objData.Admitidos).toLocaleString(),
+                "Matriculados: " + parseInt(objData.Matriculados).toLocaleString()
+            ]
+        };
+
+        let ctx = document.getElementById("cone-chart-" + this.props.indexKey);
+        let config = {
+            type: 'funnel',
+            data: {
+                datasets: [{
+                    data: objData.data,
+                    backgroundColor: [
+                        "#A8CF45",
+                        "#36A2EB",
+                        "#FFCE56"
+                    ],
+                    hoverBackgroundColor: [
+                        "#A8CF45",
+                        "#36A2EB",
+                        "#FFCE56"
+                    ]
+                }],
+                labels: [
+                    ...objData.labels
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Matriculados 1er curso'
+                },
+                tooltips: {
+                    enabled: false
+                },
+                sort: 'desc',
+                hover: {
+                    animationDuration: 0
+                },
+                events: ['click'],
+                animation: {
+                    duration: 1,
+                    onComplete: function () {
+                        var chartInstance = this.chart,
+                            ctx = chartInstance.ctx;
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'top';
+                        ctx.fillStyle = "#fff";
+
+                        this.data.datasets.forEach(function (dataset: any, i: any) {
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar: any, index: any) {
+                                var data = dataset.data[index];
+                                ctx.fillText(parseInt(data).toLocaleString(), bar._model.x, bar._model.y + 30);
+                            });
+                        });
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    }
+
     componentDidMount() {
 
         filterService.getFilterUniversities().then(
@@ -170,85 +252,6 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 this.renderChartAjax();
             }
         );
-    }
-
-    renderChart(data: any) {
-
-        let objData = data;
-        objData = {
-            data: [
-                parseFloat(objData.PorcentajeInscritos),
-                parseFloat(objData.PorcentajeAdmitidos),
-                parseFloat(objData.PorcentajeMatriculados)
-            ],
-            labels: [
-                "Inscritos: " + parseInt(objData.Inscritos).toLocaleString(),
-                "Admitidos: " + parseInt(objData.Admitidos).toLocaleString(),
-                "Matriculados: " + parseInt(objData.Matriculados).toLocaleString()
-            ]
-        };
-
-        let ctx = document.getElementById("cone-chart-" + this.props.indexKey);
-        let config = {
-            type: 'funnel',
-            data: {
-                datasets: [{
-                    data: objData.data,
-                    backgroundColor: [
-                        "#A8CF45",
-                        "#36A2EB",
-                        "#FFCE56"
-                    ],
-                    hoverBackgroundColor: [
-                        "#A8CF45",
-                        "#36A2EB",
-                        "#FFCE56"
-                    ]
-                }],
-                labels: [
-                    ...objData.labels
-                ]
-            },
-            options: {
-                responsive: true,
-                legend: {
-                    position: 'top'
-                },
-                title: {
-                    display: true,
-                    text: 'Matriculados 1er curso'
-                },
-                tooltips: {
-                    enabled: false
-                },
-                sort: 'desc',
-                hover: {
-                    animationDuration: 0
-                },
-                events: ['click'],
-                animation: {
-                    duration: 1,
-                    onComplete: function () {
-                        var chartInstance = this.chart,
-                            ctx = chartInstance.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        ctx.fillStyle = "#fff";
-
-                        this.data.datasets.forEach(function (dataset: any, i: any) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar: any, index: any) {
-                                var data = dataset.data[index];
-                                ctx.fillText(data + "%", bar._model.x, bar._model.y + 30);
-                            });
-                        });
-                    }
-                }
-            }
-        };
-
-        new Chart(ctx, config);
     }
 
     onYearsFilterChange(yearsData: Array<KeyValue>) {

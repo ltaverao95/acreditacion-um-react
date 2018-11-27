@@ -16,24 +16,6 @@ let chartServices = new ChartServices();
 
 declare let Chart: any;
 
-let barChartData = {
-    labels: new Array<any>(),
-    datasets: [
-        {
-            label: 'Pregrado',
-            backgroundColor: "#A8CF45",
-            hoverBackgroundColor: "#A8CF45",
-            data: new Array<any>()
-        },
-        {
-            label: 'Posgrado',
-            backgroundColor: "rgb(54, 162, 235)",
-            hoverBackgroundColor: "rgb(54, 162, 235)",
-            data: new Array<any>()
-        }
-    ]
-};
-
 interface OwnState {
     chart?: any;
     promisesCount?: number;
@@ -44,6 +26,24 @@ interface OwnState {
 }
 
 export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProps, IUMChartState & OwnState> {
+
+    private barChartData: any = {
+        labels: new Array<any>(),
+        datasets: [
+            {
+                label: 'Pregrado',
+                backgroundColor: "#A8CF45",
+                hoverBackgroundColor: "#A8CF45",
+                data: new Array<any>()
+            },
+            {
+                label: 'Posgrado',
+                backgroundColor: "rgb(54, 162, 235)",
+                hoverBackgroundColor: "rgb(54, 162, 235)",
+                data: new Array<any>()
+            }
+        ]
+    };
 
     constructor(props: IUMChartProps) {
 
@@ -94,7 +94,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
         this.setState({
             chart: new Chart(ctx, {
                 type: 'bar',
-                data: barChartData,
+                data: this.barChartData,
                 options: {
                     title: {
                         display: false,
@@ -269,7 +269,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
 
         yearsFiltered = yearsFiltered.sort();
 
-        barChartData.labels = [...yearsFiltered];
+        this.barChartData.labels = [...yearsFiltered];
 
         let pregradoData: Array<any> = [];
         let posgradoData: Array<any> = [];
@@ -282,8 +282,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
             posgradoData.push(...dataByYear.filter(x => x.Codigo == 2).map(x => parseInt(x.Dato)));
         }
 
-        barChartData.datasets[0].data = pregradoData;
-        barChartData.datasets[1].data = posgradoData;
+        this.barChartData.datasets[0].data = pregradoData;
+        this.barChartData.datasets[1].data = posgradoData;
 
         this.state.chart.options.title.display = true;
         this.state.chart.options.legend.display = true;
