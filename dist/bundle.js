@@ -77008,12 +77008,13 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                         display: false
                     },
                     tooltips: {
-                        callbacks: {
-                            title: function (tooltipItem, data) {
+                        enabled: false
+                        /*callbacks: {
+                            title: function (tooltipItem: any, data: any) {
                                 return data['labels'][tooltipItem[0]['index']];
                             },
-                            label: function (tooltipItem) {
-                                return _this.getFullLabelsBar(tooltipItem.yLabel);
+                            label: (tooltipItem: any) => {
+                                return this.getFullLabelsBar(tooltipItem.yLabel);
                             }
                         },
                         backgroundColor: 'black',
@@ -77023,7 +77024,7 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                         bodyFontColor: '#fff',
                         bodyFontSize: 16,
                         bodyFontStyle: 'bold',
-                        bodySpacing: 2
+                        bodySpacing: 2*/
                     },
                     responsive: true,
                     scales: {
@@ -77053,11 +77054,11 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                                     if (!currentPercentage) {
                                         return;
                                     }
-                                    if (chartInstance.tooltipActive != undefined) {
+                                    /*if (chartInstance.tooltipActive != undefined) {
                                         if (chartInstance.tooltipActive.length > 0) {
                                             ctx.fillStyle = "transparent";
                                         }
-                                    }
+                                    }*/
                                     ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y);
                                 });
                             });
@@ -77980,13 +77981,14 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                     text: 'Matriculados 1er curso'
                 },
                 tooltips: {
-                    callbacks: {
-                        title: function (tooltipItem, data) {
+                    enabled: false
+                    /*callbacks: {
+                        title: function (tooltipItem: any, data: any) {
                             return data['labels'][tooltipItem[0]['index']];
                         },
-                        label: function (tooltipItem, data) {
+                        label: (tooltipItem: any, data: any) => {
                             var dataset = data['datasets'][0];
-                            return _this.getFullPercentagesLabelsFromData(dataset['data'][tooltipItem['index']]);
+                            return this.getFullPercentagesLabelsFromData(dataset['data'][tooltipItem['index']]);
                         }
                     },
                     backgroundColor: 'black',
@@ -77996,9 +77998,10 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                     bodyFontColor: '#fff',
                     bodyFontSize: 16,
                     bodyFontStyle: 'bold',
-                    bodySpacing: 2
+                    bodySpacing: 2*/
                 },
                 sort: 'desc',
+                events: ['click'],
                 hover: {
                     animationDuration: 0
                 },
@@ -78018,11 +78021,11 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                                 if (!currentPercentage) {
                                     return;
                                 }
-                                if (chartInstance.tooltipActive != undefined) {
+                                /*if (chartInstance.tooltipActive != undefined) {
                                     if (chartInstance.tooltipActive.length > 0) {
                                         ctx.fillStyle = "transparent";
                                     }
-                                }
+                                }*/
                                 ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y + 30);
                             });
                         });

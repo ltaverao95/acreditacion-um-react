@@ -156,7 +156,8 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     text: 'Matriculados 1er curso'
                 },
                 tooltips: {
-                    callbacks: {
+                    enabled: false
+                    /*callbacks: {
                         title: function (tooltipItem: any, data: any) {
                             return data['labels'][tooltipItem[0]['index']];
                         },
@@ -172,9 +173,10 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     bodyFontColor: '#fff',
                     bodyFontSize: 16,
                     bodyFontStyle: 'bold',
-                    bodySpacing: 2
+                    bodySpacing: 2*/
                 },
                 sort: 'desc',
+                events: ['click'],
                 hover: {
                     animationDuration: 0
                 },
@@ -203,11 +205,11 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                                             return;
                                         }
 
-                                        if (chartInstance.tooltipActive != undefined) {
+                                        /*if (chartInstance.tooltipActive != undefined) {
                                             if (chartInstance.tooltipActive.length > 0) {
                                                 ctx.fillStyle = "transparent";
                                             }
-                                        }
+                                        }*/
 
                                         ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y + 30);
                                     }
