@@ -156,13 +156,28 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                     text: 'Matriculados 1er curso'
                 },
                 tooltips: {
-                    enabled: false
+                    callbacks: {
+                        title: function (tooltipItem: any, data: any) {
+                            return data['labels'][tooltipItem[0]['index']];
+                        },
+                        label: (tooltipItem: any, data: any) => {
+                            var dataset = data['datasets'][0];
+                            return this.getFullPercentagesLabelsFromData(dataset['data'][tooltipItem['index']]);
+                        }
+                    },
+                    backgroundColor: 'black',
+                    titleFontSize: 18,
+                    titleFontColor: '#0066ff',
+                    titleFontStyle: 'bold',
+                    bodyFontColor: '#fff',
+                    bodyFontSize: 16,
+                    bodyFontStyle: 'bold',
+                    bodySpacing: 2
                 },
                 sort: 'desc',
                 hover: {
                     animationDuration: 0
                 },
-                events: ['click'],
                 animation: {
                     duration: 1,
                     onComplete: () => {
@@ -181,33 +196,17 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                                 meta.data.map(
                                     (bar: any, index: number) => {
                                         var data = dataset.data[index];
-                                        
-                                        let currentPercentage = null;
 
-                                        for(let item in this.state.chartData){
-                                            if(this.state.chartData[item] == data){
-                                                switch (item){
-                                                    case "Inscritos":
-                                                    {
-                                                        currentPercentage = this.state.chartData.PorcentajeInscritos
-                                                        break;
-                                                    }
-                                                    case "Admitidos":
-                                                    {
-                                                        currentPercentage = this.state.chartData.PorcentajeAdmitidos
-                                                        break;
-                                                    }
-                                                    case "Matriculados":
-                                                    {
-                                                        currentPercentage = this.state.chartData.PorcentajeMatriculados
-                                                        break;
-                                                    }
-                                                }
-                                            }
+                                        let currentPercentage = this.getPercentagesFromData(data);
+
+                                        if (!currentPercentage) {
+                                            return;
                                         }
 
-                                        if(!currentPercentage){
-                                            return;
+                                        if (chartInstance.tooltipActive != undefined) {
+                                            if (chartInstance.tooltipActive.length > 0) {
+                                                ctx.fillStyle = "transparent";
+                                            }
                                         }
 
                                         ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y + 30);
@@ -527,6 +526,62 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 }
             });
         }
+    }
+
+    getPercentagesFromData(data: any) {
+        let currentPercentage = null;
+
+        for (let item in this.state.chartData) {
+            if (this.state.chartData[item] == data) {
+                switch (item) {
+                    case "Inscritos":
+                        {
+                            currentPercentage = this.state.chartData.PorcentajeInscritos
+                            break;
+                        }
+                    case "Admitidos":
+                        {
+                            currentPercentage = this.state.chartData.PorcentajeAdmitidos
+                            break;
+                        }
+                    case "Matriculados":
+                        {
+                            currentPercentage = this.state.chartData.PorcentajeMatriculados
+                            break;
+                        }
+                }
+            }
+        }
+
+        return currentPercentage;
+    }
+
+    getFullPercentagesLabelsFromData(data: any) {
+        let currentPercentage = null;
+
+        for (let item in this.state.chartData) {
+            if (this.state.chartData[item] == data) {
+                switch (item) {
+                    case "Inscritos":
+                        {
+                            currentPercentage = "Inscritos: " + this.state.chartData.PorcentajeInscritos + "%";
+                            break;
+                        }
+                    case "Admitidos":
+                        {
+                            currentPercentage = "Admitidos: " + this.state.chartData.PorcentajeAdmitidos + "%";
+                            break;
+                        }
+                    case "Matriculados":
+                        {
+                            currentPercentage = "Matriculados: " + this.state.chartData.PorcentajeMatriculados + "%";
+                            break;
+                        }
+                }
+            }
+        }
+
+        return currentPercentage;
     }
 
     render() {

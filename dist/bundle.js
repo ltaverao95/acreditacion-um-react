@@ -77008,12 +77008,27 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                         display: false
                     },
                     tooltips: {
-                        enabled: false
+                        callbacks: {
+                            title: function (tooltipItem, data) {
+                                return data['labels'][tooltipItem[0]['index']];
+                            },
+                            label: function (tooltipItem) {
+                                return _this.getFullLabelsBar(tooltipItem.yLabel);
+                            }
+                        },
+                        backgroundColor: 'black',
+                        titleFontSize: 18,
+                        titleFontColor: '#0066ff',
+                        titleFontStyle: 'bold',
+                        bodyFontColor: '#fff',
+                        bodyFontSize: 16,
+                        bodyFontStyle: 'bold',
+                        bodySpacing: 2
                     },
                     responsive: true,
                     scales: {
                         xAxes: [{
-                                stacked: true,
+                                stacked: true
                             }],
                         yAxes: [{
                                 stacked: true
@@ -77034,11 +77049,16 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                                 var meta = chartInstance.chart.controller.getDatasetMeta(i);
                                 meta.data.map(function (bar, index) {
                                     var data = dataset.data[index];
-                                    var currentPercentage = _this.state.chartData.find(function (x) { return x.Dato == data; });
+                                    var currentPercentage = _this.getBarLabels(data);
                                     if (!currentPercentage) {
                                         return;
                                     }
-                                    ctx.fillText(currentPercentage.PctDato + "%", bar._model.x, bar._model.y);
+                                    if (chartInstance.tooltipActive != undefined) {
+                                        if (chartInstance.tooltipActive.length > 0) {
+                                            ctx.fillStyle = "transparent";
+                                        }
+                                    }
+                                    ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y);
                                 });
                             });
                         }
@@ -77358,6 +77378,20 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                 }
             });
         }
+    };
+    UMConteoTotalMatriculadosChart.prototype.getBarLabels = function (data) {
+        var currentPercentage = this.state.chartData.find(function (x) { return x.Dato == data; });
+        if (!currentPercentage) {
+            return '';
+        }
+        return currentPercentage.PctDato;
+    };
+    UMConteoTotalMatriculadosChart.prototype.getFullLabelsBar = function (data) {
+        var currentPercentage = this.state.chartData.find(function (x) { return x.Dato == data; });
+        if (!currentPercentage) {
+            return '';
+        }
+        return currentPercentage.Nombre + ": " + currentPercentage.PctDato + "%";
     };
     UMConteoTotalMatriculadosChart.prototype.render = function () {
         return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' },
@@ -77946,13 +77980,28 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                     text: 'Matriculados 1er curso'
                 },
                 tooltips: {
-                    enabled: false
+                    callbacks: {
+                        title: function (tooltipItem, data) {
+                            return data['labels'][tooltipItem[0]['index']];
+                        },
+                        label: function (tooltipItem, data) {
+                            var dataset = data['datasets'][0];
+                            return _this.getFullPercentagesLabelsFromData(dataset['data'][tooltipItem['index']]);
+                        }
+                    },
+                    backgroundColor: 'black',
+                    titleFontSize: 18,
+                    titleFontColor: '#0066ff',
+                    titleFontStyle: 'bold',
+                    bodyFontColor: '#fff',
+                    bodyFontSize: 16,
+                    bodyFontStyle: 'bold',
+                    bodySpacing: 2
                 },
                 sort: 'desc',
                 hover: {
                     animationDuration: 0
                 },
-                events: ['click'],
                 animation: {
                     duration: 1,
                     onComplete: function () {
@@ -77965,30 +78014,14 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                             var meta = chartInstance.chart.controller.getDatasetMeta(i);
                             meta.data.map(function (bar, index) {
                                 var data = dataset.data[index];
-                                var currentPercentage = null;
-                                for (var item in _this.state.chartData) {
-                                    if (_this.state.chartData[item] == data) {
-                                        switch (item) {
-                                            case "Inscritos":
-                                                {
-                                                    currentPercentage = _this.state.chartData.PorcentajeInscritos;
-                                                    break;
-                                                }
-                                            case "Admitidos":
-                                                {
-                                                    currentPercentage = _this.state.chartData.PorcentajeAdmitidos;
-                                                    break;
-                                                }
-                                            case "Matriculados":
-                                                {
-                                                    currentPercentage = _this.state.chartData.PorcentajeMatriculados;
-                                                    break;
-                                                }
-                                        }
-                                    }
-                                }
+                                var currentPercentage = _this.getPercentagesFromData(data);
                                 if (!currentPercentage) {
                                     return;
+                                }
+                                if (chartInstance.tooltipActive != undefined) {
+                                    if (chartInstance.tooltipActive.length > 0) {
+                                        ctx.fillStyle = "transparent";
+                                    }
                                 }
                                 ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y + 30);
                             });
@@ -78254,6 +78287,56 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 }
             });
         }
+    };
+    UMMatriculadosPrimerCursoChart.prototype.getPercentagesFromData = function (data) {
+        var currentPercentage = null;
+        for (var item in this.state.chartData) {
+            if (this.state.chartData[item] == data) {
+                switch (item) {
+                    case "Inscritos":
+                        {
+                            currentPercentage = this.state.chartData.PorcentajeInscritos;
+                            break;
+                        }
+                    case "Admitidos":
+                        {
+                            currentPercentage = this.state.chartData.PorcentajeAdmitidos;
+                            break;
+                        }
+                    case "Matriculados":
+                        {
+                            currentPercentage = this.state.chartData.PorcentajeMatriculados;
+                            break;
+                        }
+                }
+            }
+        }
+        return currentPercentage;
+    };
+    UMMatriculadosPrimerCursoChart.prototype.getFullPercentagesLabelsFromData = function (data) {
+        var currentPercentage = null;
+        for (var item in this.state.chartData) {
+            if (this.state.chartData[item] == data) {
+                switch (item) {
+                    case "Inscritos":
+                        {
+                            currentPercentage = "Inscritos: " + this.state.chartData.PorcentajeInscritos + "%";
+                            break;
+                        }
+                    case "Admitidos":
+                        {
+                            currentPercentage = "Admitidos: " + this.state.chartData.PorcentajeAdmitidos + "%";
+                            break;
+                        }
+                    case "Matriculados":
+                        {
+                            currentPercentage = "Matriculados: " + this.state.chartData.PorcentajeMatriculados + "%";
+                            break;
+                        }
+                }
+            }
+        }
+        return currentPercentage;
     };
     UMMatriculadosPrimerCursoChart.prototype.render = function () {
         return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' },

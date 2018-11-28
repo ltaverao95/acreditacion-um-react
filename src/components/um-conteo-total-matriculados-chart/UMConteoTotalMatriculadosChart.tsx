@@ -93,67 +93,88 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
     componentDidMount() {
 
         let ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
-                this.setState({
-                    chart: new Chart(ctx, {
-                        type: 'bar',
-                        data: this.barChartData,
-                        options: {
-                            title: {
-                                display: false,
-                                text: 'Conteo total matriculados'
+        this.setState({
+            chart: new Chart(ctx, {
+                type: 'bar',
+                data: this.barChartData,
+                options: {
+                    title: {
+                        display: false,
+                        text: 'Conteo total matriculados'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            title: function (tooltipItem: any, data: any) {
+                                return data['labels'][tooltipItem[0]['index']];
                             },
-                            legend: {
-                                display: false
-                            },
-                            tooltips: {
-                                enabled: false
-                            },
-                            responsive: true,
-                            scales: {
-                                xAxes: [{
-                                    stacked: true,
-                                }],
-                                yAxes: [{
-                                    stacked: true
-                                }]
-                            },
-                            hover: {
-                                animationDuration: 0
-                            },
-                            animation: {
-                                duration: 1,
-                                onComplete: () => {
+                            label: (tooltipItem: any) => {
+                                return this.getFullLabelsBar(tooltipItem.yLabel);
+                            }
+                        },
+                        backgroundColor: 'black',
+                        titleFontSize: 18,
+                        titleFontColor: '#0066ff',
+                        titleFontStyle: 'bold',
+                        bodyFontColor: '#fff',
+                        bodyFontSize: 16,
+                        bodyFontStyle: 'bold',
+                        bodySpacing: 2
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: true
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    },
+                    hover: {
+                        animationDuration: 0
+                    },
+                    animation: {
+                        duration: 1,
+                        onComplete: () => {
 
-                                    var chartInstance = this.state.chart,
-                                        ctx = chartInstance.chart.ctx;
+                            var chartInstance = this.state.chart,
+                                ctx = chartInstance.chart.ctx;
 
-                                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                                    ctx.textAlign = 'center';
-                                    ctx.textBaseline = 'top';
-                                    ctx.fillStyle = "#fff";
+                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = "#fff";
 
-                                    chartInstance.data.datasets.map(
-                                        (dataset: any, i: number) => {
-                                            var meta = chartInstance.chart.controller.getDatasetMeta(i);
-                                            meta.data.map(
-                                                (bar: any, index: number) => {
-                                                    var data = dataset.data[index];
+                            chartInstance.data.datasets.map(
+                                (dataset: any, i: number) => {
+                                    var meta = chartInstance.chart.controller.getDatasetMeta(i);
+                                    meta.data.map(
+                                        (bar: any, index: number) => {
+                                            var data = dataset.data[index];
 
-                                                    var currentPercentage = this.state.chartData.find((x: any) => x.Dato == data);
-                                                    if(!currentPercentage){
-                                                        return;
-                                                    }
+                                            var currentPercentage = this.getBarLabels(data);
+                                            if (!currentPercentage) {
+                                                return;
+                                            }
 
-                                                    ctx.fillText(currentPercentage.PctDato + "%", bar._model.x, bar._model.y);
+                                            if (chartInstance.tooltipActive != undefined) {
+                                                if (chartInstance.tooltipActive.length > 0) {
+                                                    ctx.fillStyle = "transparent";
                                                 }
-                                            );
+                                            }
+
+                                            ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y);
                                         }
                                     );
                                 }
-                            }
+                            );
                         }
-                    })
-                });
+                    }
+                }
+            })
+        });
 
         filterService.getFilterUniversities().then(
             (res: AxiosResponse) => {
@@ -532,6 +553,24 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                 }
             });
         }
+    }
+
+    getBarLabels(data: any) {
+        var currentPercentage = this.state.chartData.find((x: any) => x.Dato == data);
+        if (!currentPercentage) {
+            return '';
+        }
+
+        return currentPercentage.PctDato;
+    }
+
+    getFullLabelsBar(data: any) {
+        var currentPercentage = this.state.chartData.find((x: any) => x.Dato == data);
+        if (!currentPercentage) {
+            return '';
+        }
+
+        return currentPercentage.Nombre + ": " + currentPercentage.PctDato + "%";
     }
 
     render() {
