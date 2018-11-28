@@ -18,6 +18,7 @@ declare let Chart: any;
 
 interface OwnState {
     chart?: any;
+    chartData?: Array<any>;
     promisesCount?: number;
     showLoadingDialog?: boolean;
     universitiesList?: Array<KeyValue>;
@@ -79,7 +80,8 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
             periodsList: [],
             yearsList: [],
             promisesCount: 0,
-            showLoadingDialog: true
+            showLoadingDialog: true,
+            chartData: []
         };
 
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
@@ -91,55 +93,67 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
     componentDidMount() {
 
         let ctx = document.getElementById("stacked-chart-" + this.props.indexKey);
-        this.setState({
-            chart: new Chart(ctx, {
-                type: 'bar',
-                data: this.barChartData,
-                options: {
-                    title: {
-                        display: false,
-                        text: 'Conteo total matriculados'
-                    },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        enabled: false
-                    },
-                    responsive: true,
-                    scales: {
-                        xAxes: [{
-                            stacked: true,
-                        }],
-                        yAxes: [{
-                            stacked: true
-                        }]
-                    },
-                    hover: {
-                        animationDuration: 0
-                    },
-                    animation: {
-                        duration: 1,
-                        onComplete: function () {
-                            var chartInstance = this.chart,
-                                ctx = chartInstance.ctx;
-                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'top';
-                            ctx.fillStyle = "#fff";
-    
-                            this.data.datasets.forEach(function (dataset: any, i: any) {
-                                var meta = chartInstance.controller.getDatasetMeta(i);
-                                meta.data.forEach(function (bar: any, index: any) {
-                                    var data = dataset.data[index];
-                                    ctx.fillText(parseInt(data).toLocaleString(), bar._model.x, bar._model.y);
-                                });
-                            });
+                this.setState({
+                    chart: new Chart(ctx, {
+                        type: 'bar',
+                        data: this.barChartData,
+                        options: {
+                            title: {
+                                display: false,
+                                text: 'Conteo total matriculados'
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltips: {
+                                enabled: false
+                            },
+                            responsive: true,
+                            scales: {
+                                xAxes: [{
+                                    stacked: true,
+                                }],
+                                yAxes: [{
+                                    stacked: true
+                                }]
+                            },
+                            hover: {
+                                animationDuration: 0
+                            },
+                            animation: {
+                                duration: 1,
+                                onComplete: () => {
+
+                                    var chartInstance = this.state.chart,
+                                        ctx = chartInstance.chart.ctx;
+
+                                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'top';
+                                    ctx.fillStyle = "#fff";
+
+                                    chartInstance.data.datasets.map(
+                                        (dataset: any, i: number) => {
+                                            var meta = chartInstance.chart.controller.getDatasetMeta(i);
+                                            meta.data.map(
+                                                (bar: any, index: number) => {
+                                                    var data = dataset.data[index];
+
+                                                    var currentPercentage = this.state.chartData.find((x: any) => x.Dato == data);
+                                                    if(!currentPercentage){
+                                                        return;
+                                                    }
+
+                                                    ctx.fillText(currentPercentage.PctDato + "%", bar._model.x, bar._model.y);
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            }
                         }
-                    }
-                }
-            })
-        });
+                    })
+                });
 
         filterService.getFilterUniversities().then(
             (res: AxiosResponse) => {
@@ -243,6 +257,10 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
     }
 
     renderChart(data: Array<any>) {
+
+        this.setState({
+            chartData: data
+        });
 
         let years = data.map(x => x.Anio);
         let yearsFiltered = new Array<any>();

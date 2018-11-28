@@ -76983,7 +76983,8 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
             periodsList: [],
             yearsList: [],
             promisesCount: 0,
-            showLoadingDialog: true
+            showLoadingDialog: true,
+            chartData: []
         };
         _this.onYearsFilterChange = _this.onYearsFilterChange.bind(_this);
         _this.onPeriodsFilterChange = _this.onPeriodsFilterChange.bind(_this);
@@ -77024,16 +77025,20 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
                     animation: {
                         duration: 1,
                         onComplete: function () {
-                            var chartInstance = this.chart, ctx = chartInstance.ctx;
+                            var chartInstance = _this.state.chart, ctx = chartInstance.chart.ctx;
                             ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'top';
                             ctx.fillStyle = "#fff";
-                            this.data.datasets.forEach(function (dataset, i) {
-                                var meta = chartInstance.controller.getDatasetMeta(i);
-                                meta.data.forEach(function (bar, index) {
+                            chartInstance.data.datasets.map(function (dataset, i) {
+                                var meta = chartInstance.chart.controller.getDatasetMeta(i);
+                                meta.data.map(function (bar, index) {
                                     var data = dataset.data[index];
-                                    ctx.fillText(parseInt(data).toLocaleString(), bar._model.x, bar._model.y);
+                                    var currentPercentage = _this.state.chartData.find(function (x) { return x.Dato == data; });
+                                    if (!currentPercentage) {
+                                        return;
+                                    }
+                                    ctx.fillText(currentPercentage.PctDato + "%", bar._model.x, bar._model.y);
                                 });
                             });
                         }
@@ -77119,6 +77124,9 @@ var UMConteoTotalMatriculadosChart = /** @class */ (function (_super) {
         });
     };
     UMConteoTotalMatriculadosChart.prototype.renderChart = function (data) {
+        this.setState({
+            chartData: data
+        });
         var years = data.map(function (x) { return x.Anio; });
         var yearsFiltered = new Array();
         var _loop_1 = function (i) {
@@ -77551,16 +77559,20 @@ var UMMatriculadosDepartamentoChart = /** @class */ (function (_super) {
         });
     };
     UMMatriculadosDepartamentoChart.prototype.renderChart = function (data) {
-        console.log(data);
         this.pieChartData.labels = data.map(function (x) { return x.Nombre; });
         this.pieChartData.datasets[0].data = [];
         this.pieChartData.datasets[0].backgroundColor = [];
         for (var i = 0; i < data.length; i++) {
-            this.pieChartData.datasets[0].data.push(parseFloat(data[i].PorcentajeDato));
+            this.pieChartData.datasets[0].data.push(parseFloat(data[i].PorcentajeDato).toFixed(2));
             this.pieChartData.datasets[0].backgroundColor.push(this.dynamicColors());
         }
         this.state.chart.options.title.display = true;
-        //this.state.chart.options.legend.display = true;
+        if (data.length <= 5) {
+            this.state.chart.options.legend.display = true;
+        }
+        else {
+            this.state.chart.options.legend.display = false;
+        }
         this.state.chart.update();
     };
     UMMatriculadosDepartamentoChart.prototype.onYearsFilterChange = function (yearsData) {
@@ -77888,20 +77900,21 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
         });
     };
     UMMatriculadosPrimerCursoChart.prototype.renderChart = function (data) {
+        var _this = this;
+        this.setState({
+            chartData: data
+        });
         var objData = data;
         objData = {
             data: [
-                /*parseFloat(objData.PorcentajeInscritos),
-                parseFloat(objData.PorcentajeAdmitidos),
-                parseFloat(objData.PorcentajeMatriculados)*/
                 parseInt(objData.Inscritos),
                 parseInt(objData.Admitidos),
                 parseInt(objData.Matriculados)
             ],
             labels: [
-                "Inscritos: " + parseInt(objData.Inscritos).toLocaleString(),
-                "Admitidos: " + parseInt(objData.Admitidos).toLocaleString(),
-                "Matriculados: " + parseInt(objData.Matriculados).toLocaleString()
+                "Inscritos",
+                "Admitidos",
+                "Matriculados"
             ]
         };
         var ctx = document.getElementById("cone-chart-" + this.props.indexKey);
@@ -77943,23 +77956,50 @@ var UMMatriculadosPrimerCursoChart = /** @class */ (function (_super) {
                 animation: {
                     duration: 1,
                     onComplete: function () {
-                        var chartInstance = this.chart, ctx = chartInstance.ctx;
+                        var chartInstance = _this.state.chart, ctx = chartInstance.chart.ctx;
                         ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'top';
                         ctx.fillStyle = "#fff";
-                        this.data.datasets.forEach(function (dataset, i) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar, index) {
+                        chartInstance.data.datasets.map(function (dataset, i) {
+                            var meta = chartInstance.chart.controller.getDatasetMeta(i);
+                            meta.data.map(function (bar, index) {
                                 var data = dataset.data[index];
-                                ctx.fillText(parseInt(data).toLocaleString(), bar._model.x, bar._model.y + 30);
+                                var currentPercentage = null;
+                                for (var item in _this.state.chartData) {
+                                    if (_this.state.chartData[item] == data) {
+                                        switch (item) {
+                                            case "Inscritos":
+                                                {
+                                                    currentPercentage = _this.state.chartData.PorcentajeInscritos;
+                                                    break;
+                                                }
+                                            case "Admitidos":
+                                                {
+                                                    currentPercentage = _this.state.chartData.PorcentajeAdmitidos;
+                                                    break;
+                                                }
+                                            case "Matriculados":
+                                                {
+                                                    currentPercentage = _this.state.chartData.PorcentajeMatriculados;
+                                                    break;
+                                                }
+                                        }
+                                    }
+                                }
+                                if (!currentPercentage) {
+                                    return;
+                                }
+                                ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y + 30);
                             });
                         });
                     }
                 }
             }
         };
-        new Chart(ctx, config);
+        this.setState({
+            chart: new Chart(ctx, config)
+        });
     };
     UMMatriculadosPrimerCursoChart.prototype.componentDidMount = function () {
         var _this = this;

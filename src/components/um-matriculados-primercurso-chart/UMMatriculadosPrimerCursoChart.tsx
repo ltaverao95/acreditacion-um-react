@@ -17,6 +17,8 @@ let filterService = new FilterServices();
 let chartServices = new ChartServices();
 
 interface OwnState {
+    chart?: any;
+    chartData?: any;
     promisesCount?: number;
     showLoadingDialog?: boolean;
     universitiesList?: Array<KeyValue>;
@@ -105,20 +107,21 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
 
     renderChart(data: any) {
 
+        this.setState({
+            chartData: data
+        });
+
         let objData = data;
         objData = {
             data: [
-                /*parseFloat(objData.PorcentajeInscritos),
-                parseFloat(objData.PorcentajeAdmitidos),
-                parseFloat(objData.PorcentajeMatriculados)*/
                 parseInt(objData.Inscritos),
                 parseInt(objData.Admitidos),
                 parseInt(objData.Matriculados)
             ],
             labels: [
-                "Inscritos: " + parseInt(objData.Inscritos).toLocaleString(),
-                "Admitidos: " + parseInt(objData.Admitidos).toLocaleString(),
-                "Matriculados: " + parseInt(objData.Matriculados).toLocaleString()
+                "Inscritos",
+                "Admitidos",
+                "Matriculados"
             ]
         };
 
@@ -162,27 +165,64 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                 events: ['click'],
                 animation: {
                     duration: 1,
-                    onComplete: function () {
-                        var chartInstance = this.chart,
-                            ctx = chartInstance.ctx;
+                    onComplete: () => {
+
+                        var chartInstance = this.state.chart,
+                            ctx = chartInstance.chart.ctx;
+
                         ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'top';
                         ctx.fillStyle = "#fff";
 
-                        this.data.datasets.forEach(function (dataset: any, i: any) {
-                            var meta = chartInstance.controller.getDatasetMeta(i);
-                            meta.data.forEach(function (bar: any, index: any) {
-                                var data = dataset.data[index];
-                                ctx.fillText(parseInt(data).toLocaleString(), bar._model.x, bar._model.y + 30);
-                            });
-                        });
+                        chartInstance.data.datasets.map(
+                            (dataset: any, i: number) => {
+                                var meta = chartInstance.chart.controller.getDatasetMeta(i);
+                                meta.data.map(
+                                    (bar: any, index: number) => {
+                                        var data = dataset.data[index];
+                                        
+                                        let currentPercentage = null;
+
+                                        for(let item in this.state.chartData){
+                                            if(this.state.chartData[item] == data){
+                                                switch (item){
+                                                    case "Inscritos":
+                                                    {
+                                                        currentPercentage = this.state.chartData.PorcentajeInscritos
+                                                        break;
+                                                    }
+                                                    case "Admitidos":
+                                                    {
+                                                        currentPercentage = this.state.chartData.PorcentajeAdmitidos
+                                                        break;
+                                                    }
+                                                    case "Matriculados":
+                                                    {
+                                                        currentPercentage = this.state.chartData.PorcentajeMatriculados
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if(!currentPercentage){
+                                            return;
+                                        }
+
+                                        ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y + 30);
+                                    }
+                                );
+                            }
+                        );
                     }
                 }
             }
         };
 
-        new Chart(ctx, config);
+        this.setState({
+            chart: new Chart(ctx, config)
+        });
     }
 
     componentDidMount() {

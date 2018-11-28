@@ -206,20 +206,24 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
 
     renderChart(data: Array<any>) {
 
-        console.log(data);
-
         this.pieChartData.labels = data.map(x => x.Nombre);
 
         this.pieChartData.datasets[0].data = [];
         this.pieChartData.datasets[0].backgroundColor = [];
 
         for (let i = 0; i < data.length; i++) {
-            this.pieChartData.datasets[0].data.push(parseFloat(data[i].PorcentajeDato));
+            this.pieChartData.datasets[0].data.push(parseFloat(data[i].PorcentajeDato).toFixed(2));
             this.pieChartData.datasets[0].backgroundColor.push(this.dynamicColors());
         }
 
         this.state.chart.options.title.display = true;
-        //this.state.chart.options.legend.display = true;
+
+        if(data.length <= 5){
+            this.state.chart.options.legend.display = true;
+        }
+        else{
+            this.state.chart.options.legend.display = false;
+        }
 
         this.state.chart.update();
     }
