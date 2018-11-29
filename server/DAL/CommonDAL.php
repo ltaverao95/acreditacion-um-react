@@ -453,42 +453,42 @@
             {
                 $dataBaseServicesBLL = new DataBaseServicesBLL();
 
-                $query = "delete from \"UAMSNIES\".base_poblacion_estudiantil;";
+                $query = "DROP TABLE \"UAMSNIES\".base_poblacion_estudiantil;";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
                     return $responseDTO;
                 }
 
-                $query = "delete from \"UAMSNIES\".cmn_depto;";
+                $query = "DROP TABLE \"UAMSNIES\".cmn_depto;";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
                     return $responseDTO;
                 }
 
-                $query = "delete from \"UAMSNIES\".cmn_institucion;";
+                $query = "DROP TABLE \"UAMSNIES\".cmn_institucion;";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
                     return $responseDTO;
                 }
 
-                $query = "delete from \"UAMSNIES\".cmn_listas;";
+                $query = "DROP TABLE \"UAMSNIES\".cmn_listas;";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
                     return $responseDTO;
                 }
 
-                $query = "delete from \"UAMSNIES\".cmn_municipio;";
+                $query = "DROP TABLE \"UAMSNIES\".cmn_municipio;";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
                     return $responseDTO;
                 }
 
-                $query = "delete from \"UAMSNIES\".cmn_programa;";
+                $query = "DROP TABLE \"UAMSNIES\".cmn_programa;";
                 $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
                 if($responseDTO->HasErrors)
                 {
