@@ -94,6 +94,9 @@ footer{
 canvas{
     grid-area: canvas;
 }
+.matrix-style th{
+    text-align: center;
+}
 
 /*Media Queries*/
 @media screen and (max-width: 516px){

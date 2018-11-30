@@ -5,8 +5,8 @@
         public $Q = null;
         public $ArrayParameters = null;
         private $_userName = "postgres";
-        private $_password = "simUM18*";
-        private $_dataBaseName = "postgres";
+        private $_password = "felipe0025";
+        private $_dataBaseName = "uamsniesdb";
         private $_host = "localhost";
 
         //##### IDataBaseServices implementation

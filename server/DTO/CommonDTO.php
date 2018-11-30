@@ -87,4 +87,13 @@
 		public $Dato = null;
         public $PorcentajeDato = null;
 	}
+
+	class MatrixDTO{
+		public $Codigo = null;
+		public $Nombre = null;
+		public $Anio = null;
+		public $TotalMatricula = null;
+		public $TotalVariacionMatricula = null;
+		public $Pct = null;
+	}
 ?>

@@ -28,14 +28,8 @@ interface IUMChartState{
     selectedData?: IFilterState
 }
 
-interface IMatrixProps {
-    label: string;
-}
-
 interface IMatrixState {
-    years: Array<KeyValue>;
-    universities: Array<KeyValue>;
-    data: Array<KeyValue>;
+    matrixData?: Array<any>;
 }
 
 export {
@@ -44,6 +38,5 @@ export {
     IFilterState,
     IUMChartProps,
     IUMChartState,
-    IMatrixProps,
     IMatrixState
 }

@@ -3,7 +3,8 @@ import * as React from "react";
 import { UMMatriculadosPrimerCursoChart } from '../um-matriculados-primercurso-chart/UMMatriculadosPrimerCursoChart';
 import { UMConteoTotalMatriculadosChart } from '../um-conteo-total-matriculados-chart/UMConteoTotalMatriculadosChart';
 import { UMMatriculadosDepartamentoChart } from '../um-matriculados-departamento/UMMatriculadosDepartamentoChart';
-import { MatrixComponent } from "../matrix/Matrix";
+import { UMMatrizVariacionMatriculas } from '../um-matriz-variacion-matriculas/UMMatrizVariacionMatriculas';
+import { UMMatrizTotalesMatriculas } from '../um-matriz-totales-matriculas/UMMatrizTotalesMatriculas';
 
 export class HomeComponent extends React.Component<any, undefined> {
 
@@ -75,17 +76,14 @@ export class HomeComponent extends React.Component<any, undefined> {
 
                         <UMMatriculadosDepartamentoChart indexKey={1} />
 
-                        {/*
-                        <UMMatriculadosDepartamentoChart indexKey={1} />
-
                         <br />
 
-                        <MatrixComponent label="Matriz de variación de matrículas" />
+                        <UMMatrizTotalesMatriculas />
 
-                        <br />
+                        {/*<br />
 
-                        <MatrixComponent label="Matriz de totales matrículas" />
-                        */}
+                        <UMMatrizVariacionMatriculas />*/}
+
                     </div>
                     <div className="column8"></div>
                     <div className="column9"></div>

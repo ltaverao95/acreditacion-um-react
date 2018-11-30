@@ -22286,7 +22286,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".site {\r\n    display: flex;\r\n    min-height: 100vh;\r\n    flex-direction: column;\r\n}\r\nheader{\r\n    height: 145px;\r\n    margin-bottom: 40px;\r\n}\r\nheader .top,\r\nheader .main-nav{\r\n    display: block;\r\n}\r\nheader .top{\r\n    background-color: #a7ce47;\r\n    font-size: 15px;\r\n    height: 40px;\r\n}\r\nheader .top ul li{\r\n    display: inline-block;\r\n}\r\nheader .top ul li a{\r\n    border-left: solid 1px rgba(255,255,255,.15);\r\n    color: #666;\r\n    display: block;\r\n    position: relative;\r\n    padding: 9px 15px;\r\n}\r\nheader .main-nav{\r\n    background-color: #666666;\r\n    height: 105px;\r\n}\r\n.navbar{\r\n    padding: 0 !important;\r\n}\r\n.main-container{\r\n    display: grid;\r\n    flex: 1;\r\n    grid-template-columns: 1fr 30px 1fr;\r\n    grid-template-rows: repeat(3, auto);\r\n    grid-row-gap: 50px;\r\n}\r\n.column7{\r\n    grid-column: 1 / 4;\r\n    justify-self: center;\r\n}\r\np{\r\n    font-weight: bold;\r\n    text-align: center;\r\n}\r\n.chart{\r\n    border: 1px solid #e8e8e8;\r\n    height: 300px !important;\r\n    margin: 0 auto;\r\n    width: 500px !important;\r\n}\r\n.applyfilterContainer{\r\n    display: grid;\r\n    grid-template-areas: \". button .\"\r\n                         \". canvas .\";\r\n    grid-row-gap: 10px;\r\n}\r\n.applyFilterButton{\r\n    grid-area: button;\r\n    justify-self: center;\r\n}\r\nfooter{\r\n    background-color: #22222a;\r\n    min-height: 100px;\r\n}\r\n.popoverStyle{\r\n    min-width: 200px;\r\n    min-height: 100px;\r\n}\r\n.filter-container{\r\n    display: grid;\r\n    grid-template-columns: repeat(3, 1fr);\r\n    justify-items: center;\r\n}\r\n.filter-item:nth-of-type(1){\r\n    justify-self: right;\r\n}\r\n.filter-item:nth-of-type(3){\r\n    justify-self: left;\r\n}\r\n.popover-header{\r\n    font-size: 15px;\r\n    text-align: center;\r\n    font-weight: bold;\r\n}\r\n.popover-body{\r\n    padding: 0.5em;\r\n}\r\ncanvas{\r\n    grid-area: canvas;\r\n}\r\n\r\n/*Media Queries*/\r\n@media screen and (max-width: 516px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    .column7{\r\n        justify-self: initial;\r\n    }\r\n    .chart{\r\n        width: 100% !important;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n        padding: 0;\r\n        margin: 0;\r\n        position: unset;\r\n    }\r\n    header .top ul li a{\r\n        border-left: none;\r\n        border-bottom: solid 1px rgba(255,255,255,.15);\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n}\r\n@media screen and (max-width: 768px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n    }\r\n    header .top ul li a{\r\n        border-left: 1px solid transparent;\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n    .filter-item:nth-of-type(1){\r\n        justify-self: center;\r\n    }\r\n    .filter-item:nth-of-type(3){\r\n        justify-self: center;\r\n    }\r\n}\r\n@media screen and (min-width: 768px) and (max-width: 1066px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n}", ""]);
+exports.push([module.i, ".site {\r\n    display: flex;\r\n    min-height: 100vh;\r\n    flex-direction: column;\r\n}\r\nheader{\r\n    height: 145px;\r\n    margin-bottom: 40px;\r\n}\r\nheader .top,\r\nheader .main-nav{\r\n    display: block;\r\n}\r\nheader .top{\r\n    background-color: #a7ce47;\r\n    font-size: 15px;\r\n    height: 40px;\r\n}\r\nheader .top ul li{\r\n    display: inline-block;\r\n}\r\nheader .top ul li a{\r\n    border-left: solid 1px rgba(255,255,255,.15);\r\n    color: #666;\r\n    display: block;\r\n    position: relative;\r\n    padding: 9px 15px;\r\n}\r\nheader .main-nav{\r\n    background-color: #666666;\r\n    height: 105px;\r\n}\r\n.navbar{\r\n    padding: 0 !important;\r\n}\r\n.main-container{\r\n    display: grid;\r\n    flex: 1;\r\n    grid-template-columns: 1fr 30px 1fr;\r\n    grid-template-rows: repeat(3, auto);\r\n    grid-row-gap: 50px;\r\n}\r\n.column7{\r\n    grid-column: 1 / 4;\r\n    justify-self: center;\r\n}\r\np{\r\n    font-weight: bold;\r\n    text-align: center;\r\n}\r\n.chart{\r\n    border: 1px solid #e8e8e8;\r\n    height: 300px !important;\r\n    margin: 0 auto;\r\n    width: 500px !important;\r\n}\r\n.applyfilterContainer{\r\n    display: grid;\r\n    grid-template-areas: \". button .\"\r\n                         \". canvas .\";\r\n    grid-row-gap: 10px;\r\n}\r\n.applyFilterButton{\r\n    grid-area: button;\r\n    justify-self: center;\r\n}\r\nfooter{\r\n    background-color: #22222a;\r\n    min-height: 100px;\r\n}\r\n.popoverStyle{\r\n    min-width: 200px;\r\n    min-height: 100px;\r\n}\r\n.filter-container{\r\n    display: grid;\r\n    grid-template-columns: repeat(3, 1fr);\r\n    justify-items: center;\r\n}\r\n.filter-item:nth-of-type(1){\r\n    justify-self: right;\r\n}\r\n.filter-item:nth-of-type(3){\r\n    justify-self: left;\r\n}\r\n.popover-header{\r\n    font-size: 15px;\r\n    text-align: center;\r\n    font-weight: bold;\r\n}\r\n.popover-body{\r\n    padding: 0.5em;\r\n}\r\ncanvas{\r\n    grid-area: canvas;\r\n}\r\n.matrix-style th{\r\n    text-align: center;\r\n}\r\n\r\n/*Media Queries*/\r\n@media screen and (max-width: 516px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    .column7{\r\n        justify-self: initial;\r\n    }\r\n    .chart{\r\n        width: 100% !important;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n        padding: 0;\r\n        margin: 0;\r\n        position: unset;\r\n    }\r\n    header .top ul li a{\r\n        border-left: none;\r\n        border-bottom: solid 1px rgba(255,255,255,.15);\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n}\r\n@media screen and (max-width: 768px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n    header,\r\n    header .top{\r\n        height: 100%;\r\n    }\r\n    header .top ul li{\r\n        display: block;\r\n        text-align: center;\r\n    }\r\n    header .top ul li a{\r\n        border-left: 1px solid transparent;\r\n    }\r\n    .filter-container{\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n    .filter-item:nth-of-type(1){\r\n        justify-self: center;\r\n    }\r\n    .filter-item:nth-of-type(3){\r\n        justify-self: center;\r\n    }\r\n}\r\n@media screen and (min-width: 768px) and (max-width: 1066px){\r\n    .column1,\r\n    .column3,\r\n    .column4,\r\n    .column6{\r\n        grid-column: 1 / 4;\r\n    }\r\n}", ""]);
 
 // exports
 
@@ -76848,6 +76848,7 @@ var React = __webpack_require__(/*! react */ "react");
 var UMMatriculadosPrimerCursoChart_1 = __webpack_require__(/*! ../um-matriculados-primercurso-chart/UMMatriculadosPrimerCursoChart */ "./src/components/um-matriculados-primercurso-chart/UMMatriculadosPrimerCursoChart.tsx");
 var UMConteoTotalMatriculadosChart_1 = __webpack_require__(/*! ../um-conteo-total-matriculados-chart/UMConteoTotalMatriculadosChart */ "./src/components/um-conteo-total-matriculados-chart/UMConteoTotalMatriculadosChart.tsx");
 var UMMatriculadosDepartamentoChart_1 = __webpack_require__(/*! ../um-matriculados-departamento/UMMatriculadosDepartamentoChart */ "./src/components/um-matriculados-departamento/UMMatriculadosDepartamentoChart.tsx");
+var UMMatrizTotalesMatriculas_1 = __webpack_require__(/*! ../um-matriz-totales-matriculas/UMMatrizTotalesMatriculas */ "./src/components/um-matriz-totales-matriculas/UMMatrizTotalesMatriculas.tsx");
 var HomeComponent = /** @class */ (function (_super) {
     __extends(HomeComponent, _super);
     function HomeComponent(props) {
@@ -76890,7 +76891,9 @@ var HomeComponent = /** @class */ (function (_super) {
                 React.createElement("div", { className: "column6" },
                     React.createElement(UMConteoTotalMatriculadosChart_1.UMConteoTotalMatriculadosChart, { indexKey: 2 })),
                 React.createElement("div", { className: "column7" },
-                    React.createElement(UMMatriculadosDepartamentoChart_1.UMMatriculadosDepartamentoChart, { indexKey: 1 })),
+                    React.createElement(UMMatriculadosDepartamentoChart_1.UMMatriculadosDepartamentoChart, { indexKey: 1 }),
+                    React.createElement("br", null),
+                    React.createElement(UMMatrizTotalesMatriculas_1.UMMatrizTotalesMatriculas, null)),
                 React.createElement("div", { className: "column8" }),
                 React.createElement("div", { className: "column9" })),
             React.createElement("footer", null)));
@@ -78360,6 +78363,129 @@ exports.UMMatriculadosPrimerCursoChart = UMMatriculadosPrimerCursoChart;
 
 /***/ }),
 
+/***/ "./src/components/um-matriz-totales-matriculas/UMMatrizTotalesMatriculas.tsx":
+/*!***********************************************************************************!*\
+  !*** ./src/components/um-matriz-totales-matriculas/UMMatrizTotalesMatriculas.tsx ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "react");
+var react_bootstrap_1 = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/es/index.js");
+var react_loader_advanced_1 = __webpack_require__(/*! react-loader-advanced */ "./node_modules/react-loader-advanced/lib/react-loader-advanced.js");
+var MatrixServices_1 = __webpack_require__(/*! ../../services/MatrixServices */ "./src/services/MatrixServices.ts");
+var UMMatrizTotalesMatriculas = /** @class */ (function (_super) {
+    __extends(UMMatrizTotalesMatriculas, _super);
+    function UMMatrizTotalesMatriculas(props) {
+        var _this = _super.call(this, props) || this;
+        _this.matrixService = new MatrixServices_1.MatrixServices();
+        _this.state = {
+            matrixData: [],
+            showLoadingDialog: true
+        };
+        return _this;
+    }
+    UMMatrizTotalesMatriculas.prototype.componentDidMount = function () {
+        var _this = this;
+        this.matrixService.getMatrixData().then(function (res) {
+            if (!res.data ||
+                !res.data.ResultData) {
+                return;
+            }
+            _this.setState({
+                matrixData: res.data.ResultData,
+                showLoadingDialog: false
+            });
+        });
+    };
+    UMMatrizTotalesMatriculas.prototype.getUniversitiesList = function () {
+        var universitiesList = this.state.matrixData.map(function (x) {
+            return {
+                Nombre: x.Nombre,
+                Codigo: x.Codigo
+            };
+        });
+        var universitiesListFiltered = new Array();
+        var _loop_1 = function (i) {
+            var currentUniversity = universitiesListFiltered.find(function (x) { return x.Codigo == universitiesList[i].Codigo; });
+            if (currentUniversity) {
+                return "continue";
+            }
+            universitiesListFiltered.push({
+                Codigo: universitiesList[i].Codigo,
+                Nombre: universitiesList[i].Nombre
+            });
+        };
+        for (var i = 0; i < universitiesList.length; i++) {
+            _loop_1(i);
+        }
+        return universitiesListFiltered;
+    };
+    UMMatrizTotalesMatriculas.prototype.getYearsList = function () {
+        var yearsList = this.state.matrixData.map(function (x) { return x.Anio; });
+        var yearsListFiltered = new Array();
+        var _loop_2 = function (i) {
+            var currentYear = yearsListFiltered.find(function (x) { return x == yearsList[i]; });
+            if (currentYear) {
+                return "continue";
+            }
+            yearsListFiltered.push(yearsList[i]);
+        };
+        for (var i = 0; i < yearsList.length; i++) {
+            _loop_2(i);
+        }
+        yearsListFiltered = yearsListFiltered.sort();
+        return yearsListFiltered;
+    };
+    UMMatrizTotalesMatriculas.prototype.getDataList = function (universityCode, year) {
+        return this.state.matrixData.filter(function (x) { return x.Codigo == universityCode && x.Anio == year; });
+    };
+    UMMatrizTotalesMatriculas.prototype.render = function () {
+        var _this = this;
+        return (React.createElement(react_loader_advanced_1.default, { show: this.state.showLoadingDialog, message: 'Cargando...' }, this.state.matrixData.length == 0 ?
+            React.createElement("span", null, "\u00A0") :
+            React.createElement("div", null,
+                React.createElement("p", null, "Matriz de totales matr\u00EDculas"),
+                React.createElement(react_bootstrap_1.Table, { className: "matrix-style", striped: true, bordered: true, condensed: true, hover: true, responsive: true },
+                    React.createElement("thead", null,
+                        React.createElement("tr", null,
+                            React.createElement("th", null, "Universidad"),
+                            this.getYearsList().map(function (x, index) {
+                                return React.createElement("th", { key: index }, x);
+                            }))),
+                    React.createElement("tbody", null, this.getUniversitiesList().map(function (university, index) {
+                        return (React.createElement("tr", { key: index },
+                            React.createElement("td", { key: index }, university.Nombre),
+                            _this.getYearsList().map(function (year) {
+                                return (_this.getDataList(university.Codigo, year).map(function (currentData, index) {
+                                    return React.createElement("td", { key: index }, currentData.TotalMatricula);
+                                }));
+                            })));
+                    }))))));
+    };
+    return UMMatrizTotalesMatriculas;
+}(React.Component));
+exports.UMMatrizTotalesMatriculas = UMMatrizTotalesMatriculas;
+
+
+/***/ }),
+
 /***/ "./src/config/config.json":
 /*!********************************!*\
   !*** ./src/config/config.json ***!
@@ -78367,7 +78493,7 @@ exports.UMMatriculadosPrimerCursoChart = UMMatriculadosPrimerCursoChart;
 /*! exports provided: backendurl, default */
 /***/ (function(module) {
 
-module.exports = {"backendurl":"http://172.28.20.175/server/"};
+module.exports = {"backendurl":"http://localhost:81/acreditacion-um-react/server/"};
 
 /***/ }),
 
@@ -78500,6 +78626,34 @@ var FilterServices = /** @class */ (function () {
     return FilterServices;
 }());
 exports.FilterServices = FilterServices;
+
+
+/***/ }),
+
+/***/ "./src/services/MatrixServices.ts":
+/*!****************************************!*\
+  !*** ./src/services/MatrixServices.ts ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+var ConfigService_1 = __webpack_require__(/*! ./ConfigService */ "./src/services/ConfigService.ts");
+var constants_1 = __webpack_require__(/*! ../utils/constants */ "./src/utils/constants.ts");
+var MatrixServices = /** @class */ (function () {
+    function MatrixServices() {
+        this._configService = new ConfigService_1.ConfigService();
+        this._serverURL = this._configService.GetAttribute(constants_1.UtilsConstants.ConfigAttributes.BackendURL);
+    }
+    MatrixServices.prototype.getMatrixData = function () {
+        return axios_1.default.get(this._serverURL + "api/GetMatrixVariationData.php");
+    };
+    return MatrixServices;
+}());
+exports.MatrixServices = MatrixServices;
 
 
 /***/ }),

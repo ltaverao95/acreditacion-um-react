@@ -103,6 +103,23 @@
             return $responseDTO;
         }
 
+        public function GetMatrixVariationData()
+        {
+            $responseDTO = new ResponseDTO();
+	
+            try 
+            {
+                $commonDAL = new CommonDAL();
+                $responseDTO = $commonDAL->GetMatrixVariationData();
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+            
+            return $responseDTO;
+        }
+
         public function CleanDataBase(){
             $responseDTO = new ResponseDTO();
 	

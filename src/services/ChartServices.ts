@@ -1,6 +1,5 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { KeyValue } from "../models";
 import {
     ConfigService
 } from './ConfigService';
@@ -16,15 +15,15 @@ export class ChartServices{
         this._serverURL = this._configService.GetAttribute(UtilsConstants.ConfigAttributes.BackendURL);
     }
 
-    public GetPyramidChartDataByYearPeriodUniversityCode(data: any){
+    public GetPyramidChartDataByYearPeriodUniversityCode(data: any): AxiosPromise{
         return axios.post(this._serverURL + "api/GetPyramidChartDataByYearPeriodUniversityCode.php", data);
     }
 
-    public GetStackedChartDataByYearPeriodUniversityCode(data: any){
+    public GetStackedChartDataByYearPeriodUniversityCode(data: any): AxiosPromise{
         return axios.post(this._serverURL + "api/GetStackedChartDataByYearPeriodUniversityCode.php", data);
     }
 
-    public GetPieChartDataByYearDepartmentPeriodCode(data: any){
+    public GetPieChartDataByYearDepartmentPeriodCode(data: any): AxiosPromise{
         return axios.post(this._serverURL + "api/GetPieChartDataByYearDepartmentPeriodCode.php", data);
     }
 }

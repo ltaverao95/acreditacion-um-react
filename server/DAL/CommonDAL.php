@@ -446,6 +446,63 @@
             return $responseDTO;
         }
 
+        public function GetMatrixVariationData()
+        {
+            $responseDTO = new ResponseDTO();
+            
+            try 
+            {
+                $dataBaseServicesBLL = new DataBaseServicesBLL();
+                
+                $query = "select b.ins_codigo, b.ins_nombre, b.anio, b.dato datob, s.dato datos, ((cast(b.dato as numeric)-cast(s.dato as numeric))/cast(s.dato as numeric))*100 pct from ( select i.ins_codigo, i.ins_nombre, b.anio, sum(b.dato) dato from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_institucion i on i.ins_codigo = b.codigo_institucion inner join \"UAMSNIES\".cmn_municipio m on m.mun_codigo = i.mun_codigo where b.tipo = 3 and m.depto_codigo = '17' group by i.ins_codigo, i.ins_nombre, b.anio ) b left join ( select i.ins_codigo, i.ins_nombre, b.anio, sum(b.dato) dato from \"UAMSNIES\".base_poblacion_estudiantil b inner join \"UAMSNIES\".cmn_institucion i on i.ins_codigo = b.codigo_institucion inner join \"UAMSNIES\".cmn_municipio m on m.mun_codigo = i.mun_codigo where b.tipo = 3 and m.depto_codigo = '17' group by i.ins_codigo, i.ins_nombre, b.anio ) s on s.anio = b.anio - 1 and s.ins_codigo = b.ins_codigo order by 2";
+                
+                $responseDTO = $dataBaseServicesBLL->ExecuteQuery($query);
+                if($responseDTO->HasErrors)
+                {
+                    return $responseDTO;
+                }
+
+                //Recuperar los registros de la BD
+                $result = $dataBaseServicesBLL->Q->fetchAll();	
+                
+                if($result == null ||
+                  count($result) == 0)
+                {
+                    $responseDTO->UIMessage = "No hay items para mostrar";
+                    return $responseDTO;
+                }
+
+                $itemsList = array();
+                while ($row = array_shift($result)) 
+                {
+                    $matrixDTO = new MatrixDTO();
+                    $matrixDTO->Codigo = $row['ins_codigo'];
+                    $matrixDTO->Nombre = $row['ins_nombre'];
+                    $matrixDTO->Anio = $row['anio'];
+                    $matrixDTO->TotalMatricula = $row['datob'];
+                    $matrixDTO->TotalVariacionMatricula = $row['datos'];
+                    $matrixDTO->Pct = $row['pct'];
+                    
+                    array_push($itemsList, $matrixDTO);
+                }
+
+                if($itemsList == null)
+                {
+                    $responseDTO->UIMessage = "No se encontraron registros para mostrar";
+                    return $responseDTO;
+                } 
+                
+                $responseDTO->ResultData = $itemsList;
+                $dataBaseServicesBLL->connection = null;  
+            } 
+            catch (Throwable $e) 
+            {
+                $responseDTO->SetErrorAndStackTrace("Ocurrió un problema obteniendo los datos", $e->getMessage());		
+            }
+            
+            return $responseDTO;
+        }
+
         public function CleanDataBase(){
             $responseDTO = new ResponseDTO();
 	
