@@ -78493,7 +78493,7 @@ exports.UMMatrizTotalesMatriculas = UMMatrizTotalesMatriculas;
 /*! exports provided: backendurl, default */
 /***/ (function(module) {
 
-module.exports = {"backendurl":"http://localhost:81/acreditacion-um-react/server/"};
+module.exports = {"backendurl":"http://172.28.20.175/server/"};
 
 /***/ }),
 
