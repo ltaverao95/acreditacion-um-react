@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"webpack-dev-server --open\" \"webpack -w\""
+    "dev": "concurrently \"webpack-dev-server --open\" \"--config webpack.dev.js\"",
+    "build": "webpack --config webpack.prod.js"
   },
   "repository": {
     "type": "git",
@@ -44,9 +44,11 @@
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "typescript": "^3.1.6",
+    "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
-    "webpack-livereload-plugin": "^2.1.1"
+    "webpack-livereload-plugin": "^2.1.1",
+    "webpack-merge": "^4.1.4"
   }
 }
