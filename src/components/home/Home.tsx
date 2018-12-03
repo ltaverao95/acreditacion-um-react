@@ -80,9 +80,9 @@ export class HomeComponent extends React.Component<any, undefined> {
 
                         <UMMatrizTotalesMatriculas />
 
-                        {/*<br />
+                        <br />
 
-                        <UMMatrizVariacionMatriculas />*/}
+                        <UMMatrizVariacionMatriculas />
 
                     </div>
                     <div className="column8"></div>
