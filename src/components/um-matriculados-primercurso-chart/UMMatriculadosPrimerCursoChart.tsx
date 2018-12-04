@@ -125,6 +125,8 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
             ]
         };
 
+        let funnelChart = require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
+
         let ctx = document.getElementById("cone-chart-" + this.props.indexKey);
         let config = {
             type: 'funnel',
@@ -191,6 +193,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'top';
                         ctx.fillStyle = "#fff";
+                        ctx.fontSize = 16;
 
                         chartInstance.data.datasets.map(
                             (dataset: any, i: number) => {
@@ -222,7 +225,7 @@ export class UMMatriculadosPrimerCursoChart extends React.Component<IUMChartProp
         };
 
         this.setState({
-            chart: new Chart(ctx, config)
+            chart: new funnelChart.Chart(ctx, config)
         });
     }
 

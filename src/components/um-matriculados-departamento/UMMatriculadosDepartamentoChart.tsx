@@ -18,6 +18,7 @@ declare let Chart: any;
 
 interface OwnState {
     chart?: any;
+    chartData?: Array<any>;
     promisesCount?: number;
     showLoadingDialog?: boolean;
     departmentsList?: Array<KeyValue>;
@@ -72,7 +73,8 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
             periodsList: [],
             yearsList: [],
             promisesCount: 0,
-            showLoadingDialog: true
+            showLoadingDialog: true,
+            chartData: []
         };
 
         this.onYearsFilterChange = this.onYearsFilterChange.bind(this);
@@ -99,7 +101,24 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                     tooltips: {
                         enabled: true
                     },
-                    responsive: true
+                    responsive: true,
+                    plugins: {
+                        datalabels: {
+                            align: 'top',
+                            anchor: 'center',
+                            color: function() {
+                                return "#fff";
+                            },
+                            formatter: (value: any) => {
+                                
+                                if(this.state.chartData.length >5){
+                                    return '';
+                                }
+
+                                return this.getBarLabels(value) + "%";
+                            }
+                        }
+                    }
                 }
             })
         });
@@ -205,6 +224,10 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
     }
 
     renderChart(data: Array<any>) {
+        
+        this.setState({
+            chartData: data
+        });
 
         this.pieChartData.labels = data.map(x => x.Nombre);
 
@@ -461,6 +484,24 @@ export class UMMatriculadosDepartamentoChart extends React.Component<IUMChartPro
                 }
             });
         }
+    }
+
+    getBarLabels(data: any) {
+        var currentPercentage = this.state.chartData.find((x: any) => parseFloat(x.PorcentajeDato).toFixed(2) == data);
+        if (!currentPercentage) {
+            return '';
+        }
+
+        return parseFloat(currentPercentage.PorcentajeDato).toFixed(2);
+    }
+
+    getFullLabelsBar(data: any) {
+        var currentPercentage = this.state.chartData.find((x: any) => parseFloat(x.PorcentajeDato).toFixed(2) == data);
+        if (!currentPercentage) {
+            return '';
+        }
+
+        return currentPercentage.Nombre + ": " + parseFloat(currentPercentage.PorcentajeDato).toFixed(2) + "%";
     }
 
     dynamicColors() {

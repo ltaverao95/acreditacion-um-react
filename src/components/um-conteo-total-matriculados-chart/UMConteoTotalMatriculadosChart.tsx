@@ -106,15 +106,16 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                         display: false
                     },
                     tooltips: {
-                        enabled: false
-                        /*callbacks: {
+                        mode: 'index',
+                        intersect: true,
+                        callbacks: {
                             title: function (tooltipItem: any, data: any) {
                                 return data['labels'][tooltipItem[0]['index']];
                             },
                             label: (tooltipItem: any) => {
                                 return this.getFullLabelsBar(tooltipItem.yLabel);
                             }
-                        },
+                        }/*,
                         backgroundColor: 'black',
                         titleFontSize: 18,
                         titleFontColor: '#0066ff',
@@ -136,41 +137,17 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
                     hover: {
                         animationDuration: 0
                     },
-                    animation: {
-                        duration: 1,
-                        onComplete: () => {
-
-                            var chartInstance = this.state.chart,
-                                ctx = chartInstance.chart.ctx;
-
-                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'top';
-                            ctx.fillStyle = "#fff";
-
-                            chartInstance.data.datasets.map(
-                                (dataset: any, i: number) => {
-                                    var meta = chartInstance.chart.controller.getDatasetMeta(i);
-                                    meta.data.map(
-                                        (bar: any, index: number) => {
-                                            var data = dataset.data[index];
-
-                                            var currentPercentage = this.getBarLabels(data);
-                                            if (!currentPercentage) {
-                                                return;
-                                            }
-
-                                            /*if (chartInstance.tooltipActive != undefined) {
-                                                if (chartInstance.tooltipActive.length > 0) {
-                                                    ctx.fillStyle = "transparent";
-                                                }
-                                            }*/
-
-                                            ctx.fillText(currentPercentage + "%", bar._model.x, bar._model.y);
-                                        }
-                                    );
-                                }
-                            );
+                    plugins: {
+                        datalabels: {
+                            align: 'center',
+                            anchor: 'center',
+                            color: function() {
+                                return "#fff";
+                            },
+                            formatter: (value: any) => {
+                                
+                                return this.getBarLabels(value) + "%";
+                            }
                         }
                     }
                 }
@@ -571,7 +548,7 @@ export class UMConteoTotalMatriculadosChart extends React.Component<IUMChartProp
             return '';
         }
 
-        return currentPercentage.Nombre + ": " + currentPercentage.PctDato + "%";
+        return currentPercentage.Nombre + ": " + parseInt(currentPercentage.Dato).toLocaleString();
     }
 
     render() {

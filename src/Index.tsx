@@ -9,13 +9,9 @@ import { HomeComponent } from './components/home/Home';
 
 require('chart.js/dist/Chart.min.js');
 require('chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js');
-require('chartjs-funnel/dist/chart.funnel.bundled.min.js');
 declare let Chart: any;
 
 Chart.defaults.global.defaultFontSize = 16;
-Chart.Legend.prototype.afterFit = function() {
-    this.height = this.height + 20;
-};
 
 const rootApp = document.getElementById("root-app");
 

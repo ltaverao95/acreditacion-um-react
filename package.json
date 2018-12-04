@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"webpack-dev-server --open\" \"--config webpack.dev.js\"",
+    "dev": "concurrently \"webpack-dev-server --open\" \"webpack -w\"",
     "build": "webpack --config webpack.prod.js"
   },
   "repository": {
@@ -48,7 +48,6 @@
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
-    "webpack-livereload-plugin": "^2.1.1",
-    "webpack-merge": "^4.1.4"
+    "webpack-livereload-plugin": "^2.1.1"
   }
 }
